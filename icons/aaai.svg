@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#ffffff"/>
+<!-- AAAi 앱 아이콘: 워드마크 + 아래 얇은 3색 점(AI 1·2·3). 별/반짝임 금지 -->
+<g transform="translate(96 200) scale(2)"><defs><linearGradient id="aaaiG" x1="0" y1="0" x2="160" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1f2a7a"/><stop offset=".45" stop-color="#4f52d9"/><stop offset="1" stop-color="#16b9a6"/></linearGradient></defs>
+<g fill="none" stroke="url(#aaaiG)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M5 58 L26 7 L47 58 M13.5 42 H38.5"/><path d="M49 58 L70 7 L91 58 M57.5 42 H82.5"/><path d="M93 58 L114 7 L135 58 M101.5 42 H126.5"/><path d="M150 31 V58"/><circle cx="150" cy="14" r="6.5" stroke="none" fill="url(#aaaiG)"/></g></g>
+<circle cx="216" cy="372" r="13" fill="#4f5bd5"/><circle cx="256" cy="372" r="13" fill="#2bb39a"/><circle cx="296" cy="372" r="13" fill="#f2786b"/>
+</svg>
