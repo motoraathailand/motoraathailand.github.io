@@ -13,12 +13,22 @@
     for (var i = 0; i < list.length; i++) { c = norm(list[i]); if (c) return c; }
     return 'en';
   }
+  var SPACED = { en: 1, ko: 1, hi: 1 };
+  /* "a|b|c" = phrase break points: each phrase is kept whole (no-wrap), lines break between phrases. Used for Thai/Chinese, which have no spaces. */
+  function setText(el, v, code) {
+    if (v.indexOf('|') < 0) { el.textContent = v; return; }
+    el.textContent = '';
+    v.split('|').forEach(function (p, i) {
+      if (i && SPACED[code]) el.appendChild(doc.createTextNode(' '));
+      var s = doc.createElement('span'); s.className = 'ph'; s.textContent = p; el.appendChild(s);
+    });
+  }
   var cur = null;
   function apply(code, fade) {
     cur = code; var d = S[code];
     root.lang = code === 'zh' ? 'zh-Hans' : code;
     doc.title = d.doc_title;
-    Array.prototype.forEach.call(doc.querySelectorAll('[data-i18n]'), function (el) { var v = d[el.getAttribute('data-i18n')]; if (v != null) el.textContent = v; });
+    Array.prototype.forEach.call(doc.querySelectorAll('[data-i18n]'), function (el) { var v = d[el.getAttribute('data-i18n')]; if (v != null) setText(el, v, code); });
     Array.prototype.forEach.call(doc.querySelectorAll('[data-i18n-aria]'), function (el) { var v = d[el.getAttribute('data-i18n-aria')]; if (v) el.setAttribute('aria-label', v); });
     var lb = doc.getElementById('langBtn'), lm = doc.getElementById('langMenu');
     doc.getElementById('langCur').textContent = NAMES[code];
