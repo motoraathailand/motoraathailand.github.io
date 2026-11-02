@@ -136,7 +136,7 @@ def build():
     def pic(w, h, cls, name="logo"):
         return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/{name}-dark.png?v=3">'
                 f'<img class="{cls}" src="icons/{name}.png?v=3" alt="MOTOR AA" width="{w}" height="{h}" decoding="async"></picture>')
-    logo_hdr = pic(147, 36, "logo-h", "logo-mark").replace('alt="MOTOR AA"', 'alt=""')
+    logo_hdr = pic(98, 24, "logo-h", "logo-mark").replace('alt="MOTOR AA"', 'alt=""')
     logo_hero = pic(300, 247, "logo-big")
     page = f'''<!doctype html>
 <html lang="en">
@@ -155,7 +155,7 @@ def build():
 <link rel="icon" href="icons/favicon-32.png?v=2" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=2" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="motion.css">
-<link rel="stylesheet" href="assets/hub.css">
+<link rel="stylesheet" href="assets/hub.css?v=4">
 <noscript><style>[data-reveal]{{opacity:1!important;transform:none!important}}</style></noscript>
 </head>
 <body>
