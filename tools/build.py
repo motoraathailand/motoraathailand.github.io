@@ -14,13 +14,11 @@ APPS = [
  dict(id="aacalc", name="AA Calc", icon="icons/aacalc.svg", url="https://motoraathailand.github.io/aacalc-site/", live=True,
       c="#1ea869", ink="#0f7a4b", soft="#e3f6ec", d="#3ddc97", dsoft="#14301f"),
  dict(id="moffee", name="Moffee", icon="icons/moffee.svg", url="https://motoraathailand.github.io/moffee-site/", live=True,
-      c="#b08d3c", ink="#7a5a12", soft="#f6f0e1", d="#d4b062", dsoft="#2b2414"),
+      c="#2563eb", ink="#1c2028", soft="#eceff4", d="#b4bfd6", dsoft="#262b36"),
  dict(id="suayshot", name="SuayShot", icon="icons/suayshot.png", url=None, live=False,
       c="#f59e0b", ink="#b45309", soft="#fff4de", d="#ffbf47", dsoft="#3a2b10"),
  dict(id="scanner", name="AA Scanner Lite", icon="icons/scanner.png", url=None, live=False,
       c="#2160d9", ink="#2160d9", soft="#e8f0fd", d="#7fa8ff", dsoft="#16233f"),
- dict(id="assistant", name="AA Assistant", icon="icons/aaassistant.svg", url=None, live=False,
-      c="#d6336c", ink="#b02458", soft="#fde8ef", d="#ff7aa5", dsoft="#3b1627"),
 ]
 
 S = {  # th, en, ko, zh, hi
@@ -46,10 +44,9 @@ S = {  # th, en, ko, zh, hi
  "cat_aaai": ["ผู้ช่วย AI", "AI assistants", "AI 비서", "AI 助手", "AI सहायक"],
  "cat_nammanthuk": ["ราคาน้ำมัน", "Fuel prices", "주유소 가격", "油价", "ईंधन के दाम"],
  "cat_aacalc": ["เครื่องคิดเลข", "Calculator", "계산기", "计算器", "कैलकुलेटर"],
- "cat_moffee": ["ร้านกาแฟ", "Coffee shop", "카페 주문", "咖啡店点单", "कॉफ़ी शॉप"],
+ "cat_moffee": ["รับออเดอร์หน้าร้าน", "Shop orders", "매장 주문", "门店点单", "दुकान ऑर्डर"],
  "cat_suayshot": ["แต่งภาพ", "Photo editing", "사진 보정", "照片编辑", "फ़ोटो एडिट"],
  "cat_scanner": ["สแกนรถ OBD-II", "Car OBD-II", "차량 OBD-II", "汽车 OBD-II", "कार OBD-II"],
- "cat_assistant": ["ผู้ช่วย AI", "AI assistant", "AI 비서", "AI 助手", "AI सहायक"],
  # one-liners
  "d_aaai": ["สร้างผู้ช่วย AI ได้หลายตัว คุยทีละตัว หรือรวมทีมในห้องกลุ่ม ข้อมูลอยู่ในเครื่องคุณ",
             "Create your own AI assistants and chat one-on-one or team them up in a group room. Your data stays on your phone.",
@@ -66,11 +63,11 @@ S = {  # th, en, ko, zh, hi
             "단위 변환과 환율 변환이 들어 있는 간단한 계산기. 오프라인에서 쓰고 로그인이 필요 없어요.",
             "带单位换算和汇率换算的简洁计算器。可离线使用，无需登录。",
             "यूनिट और करेंसी कन्वर्टर वाला सरल कैलकुलेटर। ऑफ़लाइन चलता है, लॉगिन नहीं चाहिए।"],
- "d_moffee": ["แอปรับออเดอร์หน้าร้านสำหรับร้านกาแฟเล็ก แตะรูปเมนู พิมพ์ใบสั่ง และปิดยอดวันละครั้ง",
-            "A counter order app for small coffee shops: tap menu photos, print tickets and close the day with one report.",
-            "작은 카페를 위한 카운터 주문 앱. 메뉴 사진을 눌러 주문받고, 주문서를 출력하고, 하루 마감 리포트까지.",
-            "为小型咖啡店设计的收银点单应用：点菜单照片下单、打印小票，一键生成日报。",
-            "छोटी कॉफ़ी शॉप के लिए काउंटर ऑर्डर ऐप: मेनू फ़ोटो टैप करें, टिकट प्रिंट करें, दिन का एक रिपोर्ट।"],
+ "d_moffee": ["แอปรับออเดอร์หน้าร้านสำหรับร้านเล็ก แตะรูปสินค้า พิมพ์ใบสั่ง และปิดยอดวันละครั้ง ใช้ออฟไลน์ได้",
+            "A simple counter order app for small shops: tap item photos to take orders, print tickets and close the day with one report. Works offline.",
+            "작은 가게를 위한 간단한 카운터 주문 앱. 상품 사진을 눌러 주문받고, 주문서를 출력하고, 하루 마감 리포트까지. 오프라인에서도 작동해요.",
+            "为小店设计的简洁收银点单应用：点商品照片下单、打印小票，一键生成日报。可离线使用。",
+            "छोटी दुकानों के लिए सरल काउंटर ऑर्डर ऐप: आइटम की फ़ोटो टैप करें, टिकट प्रिंट करें, दिन का एक रिपोर्ट। ऑफ़लाइन चलता है।"],
  "d_suayshot": ["แต่งภาพจากมือถือให้ลุคเหมือนถ่ายด้วยกล้อง DSLR ประมวลผลในเครื่อง ไม่อัปโหลดภาพ",
             "Make phone photos look like DSLR shots, with background blur and light and colour tuning, all on your device.",
             "폰 사진을 DSLR로 찍은 듯한 느낌으로 보정해요. 배경 흐림, 빛과 색 조절을 모두 기기 안에서 처리해요.",
@@ -128,6 +125,11 @@ def build():
     soons = "".join(card(a, 4 + len(live) + i) for i, a in enumerate(soon))
     langs = "".join(f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if c=="zh" else c}" data-set-lang="{c}">{ic("check","ic tick")}<span>{n}</span></button></li>' for c, n in LANGS)
     dots = "".join(f'<i style="background:{a["c"]};--i:{k}"></i>' for k, a in enumerate(APPS))
+    def pic(w, h, cls):
+        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/logo-dark.png">'
+                f'<img class="{cls}" src="icons/logo.png" alt="MOTOR AA Saraburi" width="{w}" height="{h}" decoding="async"></picture>')
+    logo_hdr = pic(52, 44, "logo-h").replace('alt="MOTOR AA Saraburi"', 'alt=""')
+    logo_hero = pic(300, 254, "logo-big")
     page = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -142,7 +144,7 @@ def build():
 <meta property="og:type" content="website"><meta property="og:site_name" content="MOTOR AA"><meta property="og:title" content="MOTOR AA — All our apps"><meta property="og:description" content="Every MOTOR AA app in one place. Pick an app to open its introduction page.">
 <meta property="og:url" content="https://motoraathailand.github.io/"><meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="icons/hub.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="assets/hub.css">
@@ -151,7 +153,7 @@ def build():
 <body>
 <div class="bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i></div>
 <header class="bar">
- <a class="brand" href="./" aria-label="MOTOR AA" data-i18n-aria="home" data-press><img src="icons/hub.svg" alt="" width="34" height="34"><span>MOTOR AA</span></a>
+ <a class="brand" href="./" aria-label="MOTOR AA" data-i18n-aria="home" data-press>{logo_hdr}<span>MOTOR AA</span></a>
  <div class="langwrap">
   <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu" data-press data-ripple>{ic("globe")}<span id="langCur">English</span></button>
   <ul class="lang-menu" id="langMenu" role="menu" hidden aria-label="Language">{langs}</ul>
@@ -159,10 +161,12 @@ def build():
 </header>
 <main data-lang-root>
  <section class="hero">
-  <p class="kicker m-stagger" style="--i:0"><span class="dots">{dots}</span><span data-i18n="kicker">MOTOR AA</span></p>
+  <div class="hero-logo m-stagger" style="--i:0">{logo_hero}</div>
+  <div class="hero-txt">
   <h1 class="m-stagger" style="--i:1" data-i18n="h1">All our apps, in one place</h1>
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">Pick an app to open its own introduction page.</p>
   <ul class="chips m-stagger" style="--i:3"><li>{ic("gift")}<span data-i18n="chips_free">Free to use</span></li><li>{ic("eye")}<span data-i18n="chips_noads">No ads here</span></li><li>{ic("shield")}<span data-i18n="chips_notrack">No trackers</span></li></ul>
+  </div>
  </section>
  <section aria-labelledby="appsH">
   <h2 id="appsH" class="sec" data-i18n="apps_h">Our apps</h2>
