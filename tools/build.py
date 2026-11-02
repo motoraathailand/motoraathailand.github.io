@@ -126,10 +126,10 @@ def build():
     langs = "".join(f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if c=="zh" else c}" data-set-lang="{c}">{ic("check","ic tick")}<span>{n}</span></button></li>' for c, n in LANGS)
     dots = "".join(f'<i style="background:{a["c"]};--i:{k}"></i>' for k, a in enumerate(APPS))
     def pic(w, h, cls):
-        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/logo-dark.png">'
-                f'<img class="{cls}" src="icons/logo.png" alt="MOTOR AA Saraburi" width="{w}" height="{h}" decoding="async"></picture>')
-    logo_hdr = pic(52, 44, "logo-h").replace('alt="MOTOR AA Saraburi"', 'alt=""')
-    logo_hero = pic(300, 254, "logo-big")
+        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/logo-dark.png?v=2">'
+                f'<img class="{cls}" src="icons/logo.png?v=2" alt="MOTOR AA" width="{w}" height="{h}" decoding="async"></picture>')
+    logo_hdr = pic(85, 44, "logo-h").replace('alt="MOTOR AA"', 'alt=""')
+    logo_hero = pic(300, 155, "logo-big")
     page = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -142,9 +142,9 @@ def build():
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="https://motoraathailand.github.io/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="MOTOR AA"><meta property="og:title" content="MOTOR AA — All our apps"><meta property="og:description" content="Every MOTOR AA app in one place. Pick an app to open its introduction page.">
-<meta property="og:url" content="https://motoraathailand.github.io/"><meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg">
+<meta property="og:url" content="https://motoraathailand.github.io/"><meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg?v=2">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-32.png?v=2" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=2" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="assets/hub.css">
