@@ -19,8 +19,10 @@ APPS = [
       c="#f59e0b", ink="#b45309", soft="#fff4de", d="#ffbf47", dsoft="#3a2b10"),
  dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True,
       c="#be185d", ink="#9d174d", soft="#fde7f1", d="#f472b6", dsoft="#3a1226"),
- dict(id="scanner", name="AA Scanner Lite", icon="icons/scanner.png", url=None, live=False,
+ dict(id="scanner", name="GreenLight", icon="icons/scanner.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02)
       c="#2160d9", ink="#2160d9", soft="#e8f0fd", d="#7fa8ff", dsoft="#16233f"),
+ dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url=None, live=False, dev=True,
+      c="#00a7b0", ink="#00717a", soft="#e0f6f7", d="#2fd4db", dsoft="#0f3a3d"),
 ]
 
 S = {  # th, en, ko, zh, hi
@@ -36,6 +38,7 @@ S = {  # th, en, ko, zh, hi
  "soon_h": ["เร็ว ๆ นี้", "Coming soon", "곧 만나요", "即将推出", "जल्द आ रहा है"],
  "soon_sub": ["แอปเหล่านี้กำลังเตรียม|หน้าแนะนำ ยังไม่เปิดให้เข้า", "These apps are getting their intro pages ready.", "이 앱들은 소개 페이지를 준비하고 있어요.", "这些应用的介绍页|正在准备中。", "इन ऐप के परिचय पेज तैयार हो रहे हैं।"],
  "soon_badge": ["เร็ว ๆ นี้", "Coming soon", "곧 공개", "即将推出", "जल्द ही"],
+ "dev_badge": ["กำลังพัฒนา", "In development", "개발 중", "开发中", "विकासाधीन"],
  "contact_h": ["ติดต่อเรา", "Contact", "문의", "联系我们", "संपर्क"],
  "contact_p": ["ข้อเสนอแนะหรือคำถามเกี่ยวกับแอป|ส่งอีเมลหาเราได้เลย", "Feedback or questions about any app? Email us.", "앱에 대한 의견이나 질문은 메일로 보내 주세요.", "对任何应用有意见或疑问，|欢迎发邮件给我们。", "किसी भी ऐप पर सुझाव या सवाल? हमें ईमेल करें।"],
  "email_btn": ["ส่งอีเมล", "Send email", "메일 보내기", "发送邮件", "ईमेल भेजें"],
@@ -49,6 +52,7 @@ S = {  # th, en, ko, zh, hi
  "cat_moffee": ["POS รับออเดอร์", "POS & orders", "POS·주문", "POS 点单", "POS ऑर्डर"],
  "cat_suayshot": ["แต่งภาพ", "Photo editing", "사진 보정", "照片编辑", "फ़ोटो एडिट"],
  "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रैंचाइज़"],
+ "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
  "cat_scanner": ["สแกนรถ OBD-II", "Car OBD-II", "차량 OBD-II", "汽车 OBD-II", "कार OBD-II"],
  # one-liners
  "d_aaai": ["สร้างผู้ช่วย AI ได้หลายตัว|คุยทีละตัว หรือรวมทีมในห้องกลุ่ม|ข้อมูลอยู่ในเครื่องคุณ",
@@ -86,6 +90,11 @@ S = {  # th, en, ko, zh, hi
             "무료 OBD-II 차량 스캐너. 고장 코드를 읽고 중고차를 점검하고 바가지를 피해요.",
             "免费 OBD-II 汽车检测：|读取故障码，检查二手车，|避免被多收费。",
             "मुफ़्त OBD-II कार स्कैनर: ट्रबल कोड पढ़ें, पुरानी कार जाँचें और ज़्यादा बिल से बचें।"],
+ "d_bgaa": ["เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์|เลือกเพลย์ลิสต์ หรือถ่ายรูปร้านเพื่อรับเพลงที่เข้ากัน|โดยใช้คีย์ AI ของคุณเอง ฟังเพลงได้แม้ไม่มีคีย์",
+            "Copyright-safe background music for shops and cafés. Pick a playlist, or photograph your shop and get music that fits, using your own AI key. Music plays without a key.",
+            "저작권 걱정 없는 매장 배경음악. 플레이리스트를 고르거나 가게 사진을 찍으면 어울리는 음악을 추천해요. 사진 분석은 내 AI 키로 하고, 키가 없어도 음악은 들을 수 있어요.",
+            "版权安全的店铺背景音乐。|选择播放列表，或拍下店铺照片，|用你自己的 AI 密钥获得合适的音乐。|没有密钥也能听音乐。",
+            "दुकानों के लिए कॉपीराइट-सुरक्षित बैकग्राउंड संगीत। प्लेलिस्ट चुनें, या दुकान की फ़ोटो लेकर अपनी AI कुंजी से सही संगीत पाएँ। कुंजी के बिना भी संगीत चलता है।"],
  "d_assistant": ["ผู้ช่วย AI ฟรี สร้างบอตของตัวเอง ใช้คีย์ AI ของคุณเอง",
             "A free AI assistant app: build your own bots and use your own AI keys.",
             "무료 AI 비서 앱. 나만의 봇을 만들고 내 AI 키로 써요.",
@@ -123,7 +132,8 @@ def card(a, idx):
         cta = f'<span class="cta"><span data-i18n="open">{S["open"][1]}</span>{ic("arrow")}</span>'
         return (f'<li class="m-stagger" style="{style}"><a class="card" href="{a["url"]}" data-app="{a["id"]}" data-press data-ripple>'
                 f'<span class="top">{head}</span>{desc}{cta}</a></li>')
-    cta = f'<span class="cta soon-b">{ic("clock")}<span data-i18n="soon_badge">{S["soon_badge"][1]}</span></span>'
+    bk = "dev_badge" if a.get("dev") else "soon_badge"
+    cta = f'<span class="cta soon-b">{ic("clock")}<span data-i18n="{bk}">{S[bk][1]}</span></span>'
     return (f'<li data-reveal style="{style};--i:{idx-len([x for x in APPS if x["live"]])}"><div class="card soon" data-app="{a["id"]}" aria-disabled="true">'
             f'<span class="top">{head}</span>{desc}{cta}</div></li>')
 
@@ -155,7 +165,7 @@ def build():
 <link rel="icon" href="icons/favicon-32.png?v=2" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=2" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="motion.css">
-<link rel="stylesheet" href="assets/hub.css?v=4">
+<link rel="stylesheet" href="assets/hub.css?v=5">
 <noscript><style>[data-reveal]{{opacity:1!important;transform:none!important}}</style></noscript>
 </head>
 <body>
@@ -192,8 +202,8 @@ def build():
 </main>
 <footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">No ads, no trackers. This page is fully static.</span></footer>
 <script src="motion.js"></script>
-<script src="assets/strings.js"></script>
-<script src="assets/hub.js"></script>
+<script src="assets/strings.js?v=5"></script>
+<script src="assets/hub.js?v=5"></script>
 </body>
 </html>
 '''
