@@ -133,11 +133,11 @@ def build():
     soons = "".join(card(a, 4 + len(live) + i) for i, a in enumerate(soon))
     langs = "".join(f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if c=="zh" else c}" data-set-lang="{c}">{ic("check","ic tick")}<span>{n}</span></button></li>' for c, n in LANGS)
     dots = "".join(f'<i style="background:{a["c"]};--i:{k}"></i>' for k, a in enumerate(APPS))
-    def pic(w, h, cls):
-        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/logo-dark.png?v=2">'
-                f'<img class="{cls}" src="icons/logo.png?v=2" alt="MOTOR AA" width="{w}" height="{h}" decoding="async"></picture>')
-    logo_hdr = pic(85, 44, "logo-h").replace('alt="MOTOR AA"', 'alt=""')
-    logo_hero = pic(300, 155, "logo-big")
+    def pic(w, h, cls, name="logo"):
+        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/{name}-dark.png?v=3">'
+                f'<img class="{cls}" src="icons/{name}.png?v=3" alt="MOTOR AA" width="{w}" height="{h}" decoding="async"></picture>')
+    logo_hdr = pic(147, 36, "logo-h", "logo-mark").replace('alt="MOTOR AA"', 'alt=""')
+    logo_hero = pic(300, 247, "logo-big")
     page = f'''<!doctype html>
 <html lang="en">
 <head>
