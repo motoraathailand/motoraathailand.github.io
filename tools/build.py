@@ -19,8 +19,8 @@ APPS = [
       c="#f59e0b", ink="#b45309", soft="#fff4de", d="#ffbf47", dsoft="#3a2b10"),
  dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True,
       c="#be185d", ink="#9d174d", soft="#fde7f1", d="#f472b6", dsoft="#3a1226"),
- dict(id="scanner", name="GreenLight", icon="icons/scanner.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02)
-      c="#2160d9", ink="#2160d9", soft="#e8f0fd", d="#7fa8ff", dsoft="#16233f"),
+ dict(id="scanner", name="GreenLight", icon="icons/greenlight.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02); icon from app 2026-11-04
+      c="#14a88a", ink="#0b7a64", soft="#e2f7f2", d="#4fe3c1", dsoft="#0f3530"),
  dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url=None, live=False, dev=True,
       c="#00a7b0", ink="#00717a", soft="#e0f6f7", d="#2fd4db", dsoft="#0f3a3d"),
 ]
@@ -53,7 +53,7 @@ S = {  # th, en, ko, zh, hi
  "cat_suayshot": ["แต่งภาพ", "Photo editing", "사진 보정", "照片编辑", "फ़ोटो एडिट"],
  "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रैंचाइज़"],
  "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
- "cat_scanner": ["สแกนรถ OBD-II", "Car OBD-II", "차량 OBD-II", "汽车 OBD-II", "कार OBD-II"],
+ "cat_scanner": ["Benz · BMW วิเคราะห์และโค้ดดิ้ง", "Benz · BMW diagnostics & coding", "벤츠·BMW 진단·코딩", "奔驰·宝马 诊断与编码", "Benz · BMW डायग्नोस्टिक्स और कोडिंग"],
  # one-liners
  "d_aaai": ["สร้างผู้ช่วย AI ได้หลายตัว|คุยทีละตัว หรือรวมทีมในห้องกลุ่ม|ข้อมูลอยู่ในเครื่องคุณ",
             "Create your own AI assistants and chat one-on-one or team them up in a group room. Your data stays on your phone.",
@@ -85,11 +85,11 @@ S = {  # th, en, ko, zh, hi
             "태국 프랜차이즈 697개 브랜드를 찾아 비용을 비교하고 예산에 맞는 곳을 골라요. 무료, 태국 전용.",
             "查找泰国 697 个加盟品牌，|比较各品牌的成本，|按预算挑选。免费，仅限泰国。",
             "थाईलैंड के 697 फ्रैंचाइज़ ब्रांड देखें, उनकी लागत की तुलना करें और बजट के हिसाब से चुनें। मुफ़्त, केवल थाईलैंड के लिए।"],
- "d_scanner": ["สแกนรถ OBD-II ฟรี|อ่านรหัสปัญหา เช็กรถมือสอง|และรู้ทันก่อนเข้าอู่",
-            "A free OBD-II car scanner: read trouble codes, check a used car and avoid being overcharged.",
-            "무료 OBD-II 차량 스캐너. 고장 코드를 읽고 중고차를 점검하고 바가지를 피해요.",
-            "免费 OBD-II 汽车检测：|读取故障码，检查二手车，|避免被多收费。",
-            "मुफ़्त OBD-II कार स्कैनर: ट्रबल कोड पढ़ें, पुरानी कार जाँचें और ज़्यादा बिल से बचें।"],
+ "d_scanner": ["แอปวิเคราะห์เชิงลึกและโค้ดดิ้งฟรี|สำหรับ Benz และ BMW โดยเฉพาะ",
+            "A free in-depth diagnostics and coding app made just for Mercedes-Benz and BMW.",
+            "벤츠·BMW 전용 무료 정밀진단 및 코딩 앱.",
+            "专为奔驰和宝马打造的|免费深度诊断与编码应用。",
+            "Mercedes-Benz और BMW के लिए खास, मुफ़्त गहन डायग्नोस्टिक्स और कोडिंग ऐप।"],
  "d_bgaa": ["เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์|เลือกเพลย์ลิสต์ หรือถ่ายรูปร้านเพื่อรับเพลงที่เข้ากัน|โดยใช้คีย์ AI ของคุณเอง ฟังเพลงได้แม้ไม่มีคีย์",
             "Copyright-safe background music for shops and cafés. Pick a playlist, or photograph your shop and get music that fits, using your own AI key. Music plays without a key.",
             "저작권 걱정 없는 매장 배경음악. 플레이리스트를 고르거나 가게 사진을 찍으면 어울리는 음악을 추천해요. 사진 분석은 내 AI 키로 하고, 키가 없어도 음악은 들을 수 있어요.",
@@ -162,7 +162,7 @@ def build():
 <meta property="og:type" content="website"><meta property="og:site_name" content="MOTOR AA"><meta property="og:title" content="MOTOR AA — All our apps"><meta property="og:description" content="Every MOTOR AA app in one place. Pick an app to open its introduction page.">
 <meta property="og:url" content="https://motoraathailand.github.io/"><meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg?v=2">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="icons/favicon-32.png?v=2" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=2" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=2">
+<link rel="icon" href="icons/favicon-32.png?v=4" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=4" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=4">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="motion.css">
 <link rel="stylesheet" href="assets/hub.css?v=5">
