@@ -17,8 +17,6 @@ APPS = [
       c="#1ea869", ink="#0f7a4b", soft="#e3f6ec", d="#3ddc97", dsoft="#14301f"),
  dict(id="moffee", name="Moffee", icon="icons/moffee.svg", url="https://motoraathailand.github.io/moffee-site/", live=True,
       c="#2563eb", ink="#1d4ed8", soft="#e8effd", d="#6ea0ff", dsoft="#172444"),
- dict(id="suayshot", name="SuayShot", icon="icons/suayshot.png", url="https://motoraathailand.github.io/suayshot-site/", live=True,
-      c="#f59e0b", ink="#b45309", soft="#fff4de", d="#ffbf47", dsoft="#3a2b10"),
  dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True,
       c="#be185d", ink="#9d174d", soft="#fde7f1", d="#f472b6", dsoft="#3a1226"),
  dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02); icon from app 2026-11-04
@@ -53,7 +51,6 @@ S = {  # th, en, ko, zh, hi
  "cat_nammanthuk": ["ราคาน้ำมัน", "Fuel prices", "주유소 가격", "油价", "ईंधन के दाम"],
  "cat_aacalc": ["เครื่องคิดเลข", "Calculator", "계산기", "计算器", "कैलकुलेटर"],
  "cat_moffee": ["POS รับออเดอร์", "POS & orders", "POS·주문", "POS 点单", "POS ऑर्डर"],
- "cat_suayshot": ["แต่งภาพ", "Photo editing", "사진 보정", "照片编辑", "फ़ोटो एडिट"],
  "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रैंचाइज़"],
  "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
  "cat_scanner": ["Benz · BMW วิเคราะห์และโค้ดดิ้ง", "Benz · BMW diagnostics & coding", "벤츠·BMW 진단·코딩", "奔驰·宝马 诊断与编码", "Benz · BMW डायग्नोस्टिक्स और कोडिंग"],
@@ -83,11 +80,6 @@ S = {  # th, en, ko, zh, hi
             "카페·음식점·상점을 위한 카운터 주문·영수증 출력 앱. 오프라인 지원, 무료.",
             "适用于咖啡馆、餐厅和商店的|柜台点单与小票打印应用。|支持离线，免费使用。",
             "कैफ़े, रेस्तरां और दुकानों के लिए काउंटर ऑर्डर और रसीद प्रिंटिंग ऐप। ऑफ़लाइन चलता है, मुफ़्त।"],
- "d_suayshot": ["แต่งภาพจากมือถือให้ลุคเหมือนถ่ายด้วยกล้อง DSLR|ประมวลผลในเครื่อง|ไม่อัปโหลดภาพ",
-            "Make phone photos look like DSLR shots, with background blur and light and colour tuning, all on your device.",
-            "폰 사진을 DSLR로 찍은 듯한 느낌으로 보정해요. 배경 흐림, 빛과 색 조절을 모두 기기 안에서 처리해요.",
-            "让手机照片拥有单反质感：|背景虚化、光线与色彩调整，|全部在本机处理。",
-            "फ़ोन की फ़ोटो को DSLR जैसा लुक दें: बैकग्राउंड ब्लर, रोशनी और रंग, सब कुछ आपके डिवाइस पर।"],
  "d_aafranchise": ["ค้นหาและเทียบแฟรนไชส์ไทย 697 แบรนด์|ดูเงินลงทุน ค่าสิทธิ์ และระยะคืนทุน|มีตัวช่วยหางบ ใช้ฟรี เฉพาะประเทศไทย",
             "Browse 697 Thai franchise brands, compare their costs and find ones that fit your budget. Free, Thailand only.",
             "태국 프랜차이즈 697개 브랜드를 찾아 비용을 비교하고 예산에 맞는 곳을 골라요. 무료, 태국 전용.",
@@ -210,7 +202,7 @@ def build():
 </main>
 <footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">No ads, no trackers. This page is fully static.</span></footer>
 <script src="motion.js"></script>
-<script src="assets/strings.js?v=6"></script>
+<script src="assets/strings.js?v=7"></script>
 <script src="assets/hub.js?v=6"></script>
 </body>
 </html>
