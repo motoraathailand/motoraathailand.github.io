@@ -19,10 +19,10 @@ APPS = [
       c="#2563eb", ink="#1d4ed8", soft="#e8effd", d="#6ea0ff", dsoft="#172444"),
  dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True,
       c="#be185d", ink="#9d174d", soft="#fde7f1", d="#f472b6", dsoft="#3a1226"),
+ dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True,  # intro HTTP 200 verified 2026-11-05
+      c="#00a7b0", ink="#00717a", soft="#e0f6f7", d="#2fd4db", dsoft="#0f3a3d"),
  dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02); icon from app 2026-11-04
       c="#14a88a", ink="#0b7a64", soft="#e2f7f2", d="#4fe3c1", dsoft="#0f3530"),
- dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url=None, live=False, dev=True,
-      c="#00a7b0", ink="#00717a", soft="#e0f6f7", d="#2fd4db", dsoft="#0f3a3d"),
 ]
 
 S = {  # th, en, ko, zh, hi
