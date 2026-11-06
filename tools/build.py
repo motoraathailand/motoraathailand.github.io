@@ -151,15 +151,10 @@ def render_page(page):
     url = SITE + "/" + page["path"]
     title = S["doc_title"][index]
     region = S["region_" + page["slug"]][index]
+    # Local apps first, then worldwide — one grid so card gaps stay even.
+    ordered_live = local_apps + global_live
+    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(ordered_live))
     local_markup = ""
-    if local_apps:
-        local_key = "local_h_" + page["slug"]
-        local_cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(local_apps))
-        local_markup = f'''<section class="apps-block">
-  <ul class="app-grid">{local_cards}</ul>
-</section>
-'''
-    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(global_live))
     upcoming_markup = ""
     if global_upcoming:
         soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(global_upcoming))
@@ -195,7 +190,7 @@ def render_page(page):
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/motion.css">
-<link rel="stylesheet" href="/assets/hub.css?v=8">
+<link rel="stylesheet" href="/assets/hub.css?v=9">
 </head>
 <body data-region="{page['slug']}">
 <div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
@@ -214,7 +209,7 @@ def render_page(page):
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
   <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
  </section>
- {local_markup}<section class="apps-block">
+ <section class="apps-block">
   <ul class="app-grid">{cards}</ul>
  </section>
  {upcoming_markup}
