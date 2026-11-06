@@ -223,7 +223,7 @@ def render_page(page):
 <script>window.HUB_REGION={json.dumps(page['slug'])};window.HUB_DEFAULT={json.dumps(page['default'])};</script>
 <script src="/motion.js"></script>
 <script>window.HUB_STRINGS={json.dumps(i18n_js(), ensure_ascii=False, separators=(',', ':'))};window.HUB_LANGS={json.dumps([c for c, _ in LANGS])};</script>
-<script src="/assets/hub.js?v=8"></script>
+<script src="/assets/hub.js?v=9"></script>
 </body>
 </html>
 '''

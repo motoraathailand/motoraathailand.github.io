@@ -1,4 +1,4 @@
-/* Independent regional hubs. ?lang= > this region's saved choice > page default. */
+/* Independent regional hubs. ?lang= > this region's saved choice > device language > English. */
 (function () {
   'use strict';
   var S = window.HUB_STRINGS, L = window.HUB_LANGS, doc = document, root = doc.documentElement;
@@ -9,7 +9,9 @@
   function store(v) { try { if (v === undefined) return localStorage.getItem(STORE); localStorage.setItem(STORE, v); } catch (e) { return null; } }
   function pick() {
     var q = null; try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
-    return norm(q) || norm(store()) || def;
+    var dev = null, list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+    for (var i = 0; i < list.length && !dev; i++) dev = norm(list[i]);
+    return norm(q) || norm(store()) || dev || 'en';
   }
   var SPACED = { en: 1, ko: 1, hi: 1 };
   function setText(el, v, code) {
