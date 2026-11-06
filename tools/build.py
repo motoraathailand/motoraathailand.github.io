@@ -60,7 +60,8 @@ S = {
     "chips_noads": ["", "", "", "", ""],
     "chips_notrack": ["ไม่มีตัวติดตาม", "No trackers", "추적 없음", "无追踪", "कोई ट्रैकर नहीं"],
     "apps_h": ["แอปของเรา", "Our apps", "앱 둘러보기", "我们的应用", "हमारे ऐप"],
-    "local_h": ["สำหรับประเทศไทย", "Made for Thailand", "한국을 위한 앱", "本地应用", "आपके क्षेत्र के लिए"],
+    "local_h_kr": ["สำหรับเกาหลี", "Made for Korea", "한국을 위한 앱", "韩国本地应用", "कोरिया के लिए"],
+    "local_h_th": ["สำหรับประเทศไทย", "Made for Thailand", "태국을 위한 앱", "泰国本地应用", "थाईलैंड के लिए"],
     "open": ["ดูรายละเอียด", "Explore app", "자세히 보기", "查看详情", "ऐप देखें"],
     "soon_h": ["กำลังเตรียมให้บริการ", "On the horizon", "곧 만나요", "即将推出", "जल्द आ रहा है"],
     "soon_sub": ["แอปใหม่กำลังอยู่ระหว่างการพัฒนา", "Something new is taking shape.", "새로운 앱을 준비하고 있어요.", "新应用正在准备中。", "कुछ नया तैयार हो रहा है।"],
@@ -143,16 +144,26 @@ def card(app, index, default_index):
 
 def render_page(page):
     apps = [a for a in APPS if a["region"] in page["regions"]]
-    live = [a for a in apps if a["live"]]
-    upcoming = [a for a in apps if not a["live"]]
+    local_apps = [a for a in apps if a["region"] != "global"]
+    global_live = [a for a in apps if a["region"] == "global" and a["live"]]
+    global_upcoming = [a for a in apps if a["region"] == "global" and not a["live"]]
     index = LANGS.index(next(item for item in LANGS if item[0] == page["default"]))
     url = SITE + "/" + page["path"]
     title = S["doc_title"][index]
     region = S["region_" + page["slug"]][index]
-    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(live))
+    local_markup = ""
+    if local_apps:
+        local_key = "local_h_" + page["slug"]
+        local_cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(local_apps))
+        local_markup = f'''<section aria-labelledby="localH">
+  <h2 id="localH" class="section-title" data-i18n="{local_key}">{S[local_key][index]}</h2>
+  <ul class="app-grid">{local_cards}</ul>
+</section>
+'''
+    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(global_live))
     upcoming_markup = ""
-    if upcoming:
-        soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(upcoming))
+    if global_upcoming:
+        soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(global_upcoming))
         upcoming_markup = f'''<section class="soon-section" aria-labelledby="soonH">
 <h2 id="soonH" class="section-title" data-i18n="soon_h">{S["soon_h"][index]}</h2>
 <p class="section-sub" data-i18n="soon_sub">{S["soon_sub"][index]}</p>
@@ -204,7 +215,7 @@ def render_page(page):
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
   <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
  </section>
- <section aria-labelledby="appsH">
+ {local_markup}<section aria-labelledby="appsH">
   <h2 id="appsH" class="section-title" data-i18n="apps_h">{S['apps_h'][index]}</h2>
   <ul class="app-grid">{cards}</ul>
  </section>
