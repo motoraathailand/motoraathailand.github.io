@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MOTOR AA — 모든 앱</title>
+<meta name="description" content="MOTOR AA — 한국 + 전 세계. Pick an app to open its introduction page. No ads, no trackers.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#fffaf5">
+<link rel="canonical" href="https://motoraathailand.github.io/kr/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MOTOR AA">
+<meta property="og:title" content="MOTOR AA — 모든 앱">
+<meta property="og:description" content="Everyday apps in one sunny place.">
+<meta property="og:url" content="https://motoraathailand.github.io/kr/">
+<meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/icons/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/motion.css">
+<link rel="stylesheet" href="/assets/hub.css?v=8">
+</head>
+<body data-region="kr">
+<div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
+<header class="bar">
+ <span class="region" data-i18n="region_kr">한국 + 전 세계</span>
+ <span class="brand"><picture><source media="(prefers-color-scheme: dark)" srcset="/icons/logo-mark-dark.png"><img src="/icons/logo-mark.png" alt="AA" width="180" height="45"></picture></span>
+ <div class="langwrap">
+  <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu" aria-label="Language" data-press><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9S14.6 18.3 12 21c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg><span id="langCur">한국어</span></button>
+  <ul class="lang-menu" id="langMenu" role="menu" hidden aria-label="Language"><li role="none"><button role="menuitemradio" aria-checked="false" lang="th" data-set-lang="th"><svg class="ic tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>ไทย</span></button></li>
+<li role="none"><button role="menuitemradio" aria-checked="false" lang="en" data-set-lang="en"><svg class="ic tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>English</span></button></li>
+<li role="none"><button role="menuitemradio" aria-checked="false" lang="ko" data-set-lang="ko"><svg class="ic tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>한국어</span></button></li>
+<li role="none"><button role="menuitemradio" aria-checked="false" lang="zh-Hans" data-set-lang="zh"><svg class="ic tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>中文</span></button></li>
+<li role="none"><button role="menuitemradio" aria-checked="false" lang="hi" data-set-lang="hi"><svg class="ic tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>हिन्दी</span></button></li></ul>
+ </div>
+</header>
+<main data-lang-root>
+ <section class="hero">
+  <span class="eyebrow m-stagger" style="--i:0"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg><span data-i18n="region_kr">한국 + 전 세계</span></span>
+  <h1 class="m-stagger" style="--i:1" data-i18n="h1">일상의 앱을 한곳에</h1>
+  <p class="sub m-stagger" style="--i:2" data-i18n="sub">필요한 앱을 고르고 소개 페이지를 만나 보세요.</p>
+  <ul class="chips m-stagger" style="--i:3"><li><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg><span data-i18n="chips_free">무료 사용</span></li><li><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span data-i18n="chips_noads">광고 없음</span></li><li><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg><span data-i18n="chips_notrack">추적 없음</span></li></ul>
+ </section>
+ <section aria-labelledby="appsH">
+  <h2 id="appsH" class="section-title" data-i18n="apps_h">앱 둘러보기</h2>
+  <ul class="app-grid"><li class="m-stagger" style="--card-start:#eaa3aa;--card-end:#f4c6c1;--card-ink:#66353e;--i:2">
+<a class="card" href="https://aaai-iji8.onrender.com/about" data-app="aaai" data-press data-ripple><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_aaai">AI 비서</span>
+  <span class="app-name">AAAi</span>
+  <span class="desc" data-i18n="d_aaai">나만의 AI 비서를 만들고 1:1 또는 단체방에서 대화해요. 데이터는 내 폰에 저장돼요.</span>
+</span><span class="app-ic"><img src="/icons/aaai.svg" alt="" width="96" height="96" decoding="async"></span><span class="cta"><span data-i18n="open">자세히 보기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</li>
+<li class="m-stagger" style="--card-start:#ed967f;--card-end:#f4baa1;--card-ink:#703b31;--i:3">
+<a class="card" href="https://motoraathailand.github.io/autoreport-site/" data-app="autoreport" data-press data-ripple><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_autoreport">정비소</span>
+  <span class="app-name">AutoReport</span>
+  <span class="desc" data-i18n="d_autoreport">정비소를 위한 견적서·작업지시서·정비 이력. A4 인쇄와 PDF 공유를 지원해요.</span>
+</span><span class="app-ic"><img src="/icons/autoreport.png" alt="" width="96" height="96" decoding="async"></span><span class="cta"><span data-i18n="open">자세히 보기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</li>
+<li class="m-stagger" style="--card-start:#ee9c7f;--card-end:#f5c19e;--card-ink:#6c3b29;--i:4">
+<a class="card" href="https://motoraathailand.github.io/aacalc-site/" data-app="aacalc" data-press data-ripple><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_aacalc">계산기</span>
+  <span class="app-name">AA Calc</span>
+  <span class="desc" data-i18n="d_aacalc">단위 변환과 환율 변환을 지원하는 계산기. 오프라인에서도 로그인 없이 사용해요.</span>
+</span><span class="app-ic"><img src="/icons/aacalc.svg" alt="" width="96" height="96" decoding="async"></span><span class="cta"><span data-i18n="open">자세히 보기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</li>
+<li class="m-stagger" style="--card-start:#f5dfc7;--card-end:#fff0dc;--card-ink:#704735;--i:5">
+<a class="card" href="https://motoraathailand.github.io/moffee-site/" data-app="moffee" data-press data-ripple><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_moffee">POS·주문</span>
+  <span class="app-name">Moffee</span>
+  <span class="desc" data-i18n="d_moffee">카페·음식점·상점을 위한 주문·영수증 출력 앱. 오프라인에서도 사용할 수 있어요.</span>
+</span><span class="app-ic"><img src="/icons/moffee.svg" alt="" width="96" height="96" decoding="async"></span><span class="cta"><span data-i18n="open">자세히 보기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</li>
+<li class="m-stagger" style="--card-start:#eeb4a9;--card-end:#f7d4c1;--card-ink:#6c3c35;--i:6">
+<a class="card" href="https://motoraathailand.github.io/bgaa-site/" data-app="bgaa" data-press data-ripple><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_bgaa">매장 배경음악</span>
+  <span class="app-name">BGAA</span>
+  <span class="desc" data-i18n="d_bgaa">저작권 걱정 없는 매장 배경음악. 가게 분위기에 어울리는 플레이리스트를 골라 보세요.</span>
+</span><span class="app-ic"><img src="/icons/bgaa.png" alt="" width="96" height="96" decoding="async"></span><span class="cta"><span data-i18n="open">자세히 보기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+</li></ul>
+ </section>
+ <section class="soon-section" aria-labelledby="soonH">
+<h2 id="soonH" class="section-title" data-i18n="soon_h">곧 만나요</h2>
+<p class="section-sub" data-i18n="soon_sub">새로운 앱을 준비하고 있어요.</p>
+<ul class="app-grid"><li class="m-stagger" style="--card-start:#e99b8d;--card-end:#f4c4ae;--card-ink:#693a30;--i:8">
+<div class="card soon" data-app="scanner" aria-disabled="true"><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_scanner">벤츠·BMW·아우디 점검</span>
+  <span class="app-name">GREENLIGHT</span>
+  <span class="desc" data-i18n="d_scanner">벤츠·BMW·아우디를 위한 정밀진단 및 코딩 앱.</span>
+</span><span class="app-ic"><img src="/icons/greenlight.png" alt="" width="96" height="96" decoding="async"></span><span class="cta status"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="dev_badge">개발 중</span></span></div>
+</li>
+<li class="m-stagger" style="--card-start:#edab98;--card-end:#f8cfb8;--card-ink:#663c30;--i:9">
+<div class="card soon" data-app="fuelkr" aria-disabled="true"><svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg><span class="app-copy">
+  <span class="cat" data-i18n="cat_fuelkr">주유소 가격 · 한국</span>
+  <span class="app-name">주유소를부탁해</span>
+  <span class="desc" data-i18n="d_fuelkr">한국 운전자를 위한 유가와 가까운 주유소 정보. 현재 개발 중이에요.</span>
+</span><span class="app-ic"><img src="/icons/fuelkr.svg" alt="" width="96" height="96" decoding="async"></span><span class="cta status"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="dev_badge">개발 중</span></span></div>
+</li></ul>
+</section>
+ <section class="contact m-stagger" style="--i:6">
+  <span class="contact-icon"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg></span>
+  <div><h2 data-i18n="contact_h">문의하기</h2><p data-i18n="contact_p">앱에 대한 의견이나 질문을 보내 주세요.</p></div>
+  <a class="btn" href="mailto:motoraathailand@gmail.com" aria-label="motoraathailand@gmail.com" data-press data-ripple><span data-i18n="email_btn">메일 보내기</span><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+ </section>
+</main>
+<footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">광고 없음, 추적 없음. 정적 웹사이트예요.</span></footer>
+<script>window.HUB_REGION="kr";window.HUB_DEFAULT="ko";</script>
+<script src="/motion.js"></script>
+<script>window.HUB_STRINGS={"th":{"doc_title":"MOTOR AA — แอปทั้งหมดของเรา","region_world":"แอปสำหรับทั่วโลก","region_kr":"เกาหลี + ทั่วโลก","region_th":"ไทย + ทั่วโลก","h1":"แอปที่คุณชื่นชอบ อยู่ที่เดียว","sub":"เลือกแอปที่ใช่ แล้วเปิดหน้าแนะนำได้เลย","chips_free":"ใช้ฟรี","chips_noads":"ไม่มีโฆษณา","chips_notrack":"ไม่มีตัวติดตาม","apps_h":"แอปของเรา","local_h":"สำหรับประเทศไทย","open":"ดูรายละเอียด","soon_h":"กำลังเตรียมให้บริการ","soon_sub":"แอปใหม่กำลังอยู่ระหว่างการพัฒนา","soon_badge":"เร็ว ๆ นี้","dev_badge":"กำลังพัฒนา","contact_h":"มาคุยกัน","contact_p":"ข้อเสนอแนะหรือคำถาม ส่งอีเมลหาเราได้เลย","email_btn":"ส่งอีเมล","lang":"ภาษา","footer":"ไม่มีโฆษณา ไม่มีตัวติดตาม เว็บไซต์แบบสแตติก","home":"MOTOR AA หน้าแรก","cat_aaai":"ผู้ช่วย AI","cat_autoreport":"อู่ซ่อมรถ","cat_nammanthuk":"ราคาน้ำมันในประเทศไทย","cat_aacalc":"เครื่องคิดเลข","cat_moffee":"POS รับออเดอร์","cat_aafranchise":"แฟรนไชส์ไทย","cat_bgaa":"เพลงประกอบร้าน","cat_scanner":"Benz · BMW · Audi","cat_fuelkr":"주유소 가격 · 한국","d_aaai":"สร้างผู้ช่วย AI ของคุณ คุยแบบตัวต่อตัวหรือรวมทีมในห้องกลุ่ม ข้อมูลอยู่ในเครื่องคุณ","d_autoreport":"ใบเสนอราคา ใบสั่งงาน และประวัติซ่อมสำหรับอู่ พิมพ์ A4 หรือ PDF","d_aacalc":"เครื่องคิดเลข แปลงหน่วยและสกุลเงิน ใช้ออฟไลน์ได้โดยไม่ต้องล็อกอิน","d_moffee":"รับออเดอร์และพิมพ์ใบเสร็จสำหรับร้านกาแฟและร้านอาหาร ใช้ออฟไลน์ได้","d_bgaa":"เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์ เลือกเพลย์ลิสต์ที่เข้ากับบรรยากาศร้าน","d_scanner":"วิเคราะห์เชิงลึกและโค้ดดิ้งสำหรับ Mercedes-Benz, BMW และ Audi","d_nammanthuk":"ดูราคาน้ำมัน ปั๊มใกล้คุณ และสถานะน้ำมันจากผู้ใช้ในประเทศไทย","d_aafranchise":"ค้นหาและเปรียบเทียบแฟรนไชส์ไทย ดูเงินลงทุนและระยะคืนทุน","d_fuelkr":"ข้อมูลราคาน้ำมันและปั๊มใกล้เคียงสำหรับผู้ขับขี่ในเกาหลี กำลังอยู่ระหว่างการพัฒนา"},"en":{"doc_title":"MOTOR AA — All our apps","region_world":"Worldwide apps","region_kr":"Korea + Worldwide","region_th":"Thailand + Worldwide","h1":"Everyday apps, one sunny place","sub":"Find your next everyday essential, wrapped in a little tropical warmth.","chips_free":"Free to use","chips_noads":"No ads","chips_notrack":"No trackers","apps_h":"Our apps","local_h":"Made for Thailand","open":"Explore app","soon_h":"On the horizon","soon_sub":"Something new is taking shape.","soon_badge":"Coming soon","dev_badge":"In development","contact_h":"Let’s talk","contact_p":"A question, an idea, or just want to say hello?","email_btn":"Send email","lang":"Language","footer":"No ads, no trackers. Always a little sunshine.","home":"MOTOR AA home","cat_aaai":"AI assistants","cat_autoreport":"Car repair shops","cat_nammanthuk":"Fuel prices · Thailand","cat_aacalc":"Calculator","cat_moffee":"POS & orders","cat_aafranchise":"Thai franchises","cat_bgaa":"Store background music","cat_scanner":"Benz · BMW · Audi diagnostics","cat_fuelkr":"Fuel prices · Korea","d_aaai":"Create your own AI assistants, chat one-on-one or bring the team together. Your data stays on your phone.","d_autoreport":"Quotes, job sheets and service history for car repair shops. Print A4 or share a PDF.","d_aacalc":"A simple calculator with unit and currency converters. Works offline, no login needed.","d_moffee":"Counter ordering and receipt printing for cafés, restaurants and shops. Works offline.","d_bgaa":"Copyright-safe background music for shops and cafés. Pick a playlist that fits the mood.","d_scanner":"In-depth diagnostics and coding for Mercedes-Benz, BMW and Audi.","d_nammanthuk":"Fuel prices, nearby stations and driver-shared stock updates across Thailand.","d_aafranchise":"Discover and compare Thai franchises, from investment to payback period.","d_fuelkr":"Fuel prices and nearby stations for drivers in Korea. Currently in development."},"ko":{"doc_title":"MOTOR AA — 모든 앱","region_world":"전 세계 앱","region_kr":"한국 + 전 세계","region_th":"태국 + 전 세계","h1":"일상의 앱을 한곳에","sub":"필요한 앱을 고르고 소개 페이지를 만나 보세요.","chips_free":"무료 사용","chips_noads":"광고 없음","chips_notrack":"추적 없음","apps_h":"앱 둘러보기","local_h":"한국을 위한 앱","open":"자세히 보기","soon_h":"곧 만나요","soon_sub":"새로운 앱을 준비하고 있어요.","soon_badge":"곧 공개","dev_badge":"개발 중","contact_h":"문의하기","contact_p":"앱에 대한 의견이나 질문을 보내 주세요.","email_btn":"메일 보내기","lang":"언어","footer":"광고 없음, 추적 없음. 정적 웹사이트예요.","home":"MOTOR AA 홈","cat_aaai":"AI 비서","cat_autoreport":"정비소","cat_nammanthuk":"태국 주유소 가격","cat_aacalc":"계산기","cat_moffee":"POS·주문","cat_aafranchise":"태국 프랜차이즈","cat_bgaa":"매장 배경음악","cat_scanner":"벤츠·BMW·아우디 점검","cat_fuelkr":"주유소 가격 · 한국","d_aaai":"나만의 AI 비서를 만들고 1:1 또는 단체방에서 대화해요. 데이터는 내 폰에 저장돼요.","d_autoreport":"정비소를 위한 견적서·작업지시서·정비 이력. A4 인쇄와 PDF 공유를 지원해요.","d_aacalc":"단위 변환과 환율 변환을 지원하는 계산기. 오프라인에서도 로그인 없이 사용해요.","d_moffee":"카페·음식점·상점을 위한 주문·영수증 출력 앱. 오프라인에서도 사용할 수 있어요.","d_bgaa":"저작권 걱정 없는 매장 배경음악. 가게 분위기에 어울리는 플레이리스트를 골라 보세요.","d_scanner":"벤츠·BMW·아우디를 위한 정밀진단 및 코딩 앱.","d_nammanthuk":"태국의 유가, 가까운 주유소와 운전자가 공유하는 재고 정보를 확인해요.","d_aafranchise":"태국 프랜차이즈의 투자 비용과 투자 회수 기간을 비교해 보세요.","d_fuelkr":"한국 운전자를 위한 유가와 가까운 주유소 정보. 현재 개발 중이에요."},"zh":{"doc_title":"MOTOR AA — 我们的全部应用","region_world":"全球应用","region_kr":"韩国 + 全球","region_th":"泰国 + 全球","h1":"日常应用， 一站直达","sub":"选择所需应用，打开它的介绍页面。","chips_free":"免费使用","chips_noads":"无广告","chips_notrack":"无追踪","apps_h":"我们的应用","local_h":"本地应用","open":"查看详情","soon_h":"即将推出","soon_sub":"新应用正在准备中。","soon_badge":"即将推出","dev_badge":"开发中","contact_h":"联系我们","contact_p":"有任何意见或问题，欢迎发邮件给我们。","email_btn":"发送邮件","lang":"语言","footer":"无广告、无追踪。纯静态网站。","home":"MOTOR AA 首页","cat_aaai":"AI 助手","cat_autoreport":"汽修店","cat_nammanthuk":"泰国油价","cat_aacalc":"计算器","cat_moffee":"POS 点单","cat_aafranchise":"泰国加盟","cat_bgaa":"店铺背景音乐","cat_scanner":"奔驰·宝马·奥迪诊断","cat_fuelkr":"韩国油价 · 韩国","d_aaai":"创建你的专属 AI 助手，单独聊天或团队协作。数据保存在你的手机上。","d_autoreport":"汽修店报价单、工单与维修记录，支持 A4 打印和 PDF 分享。","d_aacalc":"简洁的计算器，带单位与汇率换算。可离线使用，无需登录。","d_moffee":"适用于咖啡馆、餐厅和商店的点单与小票打印。支持离线使用。","d_bgaa":"适用于商店和咖啡馆的版权安全背景音乐。","d_scanner":"专为奔驰、宝马和奥迪打造的深度诊断与编码应用。","d_nammanthuk":"查看泰国油价、附近加油站以及车主分享的油品库存。","d_aafranchise":"发现泰国加盟品牌，比较投资额与回本周期。","d_fuelkr":"为韩国司机提供油价和附近加油站信息，目前正在开发中。"},"hi":{"doc_title":"MOTOR AA — हमारे सभी ऐप","region_world":"दुनिया भर के ऐप","region_kr":"कोरिया + दुनिया भर","region_th":"थाईलैंड + दुनिया भर","h1":"आपके रोज़मर्रा के ऐप, एक ही जगह","sub":"अपना अगला ज़रूरी ऐप चुनें और उसका परिचय पेज खोलें।","chips_free":"मुफ़्त","chips_noads":"कोई विज्ञापन नहीं","chips_notrack":"कोई ट्रैकर नहीं","apps_h":"हमारे ऐप","local_h":"आपके क्षेत्र के लिए","open":"ऐप देखें","soon_h":"जल्द आ रहा है","soon_sub":"कुछ नया तैयार हो रहा है।","soon_badge":"जल्द ही","dev_badge":"विकासाधीन","contact_h":"बात करें","contact_p":"कोई सवाल या सुझाव? हमें ईमेल करें।","email_btn":"ईमेल भेजें","lang":"भाषा","footer":"कोई विज्ञापन नहीं, कोई फ़ाइल ट्रैकर नहीं।","home":"MOTOR AA होम","cat_aaai":"AI सहायक","cat_autoreport":"कार रिपेयर शॉप","cat_nammanthuk":"थाईलैंड में ईंधन के दाम","cat_aacalc":"कैलकुलेटर","cat_moffee":"POS ऑर्डर","cat_aafranchise":"थाई फ्रेंचाइज़","cat_bgaa":"स्टोर बैकग्राउंड संगीत","cat_scanner":"Benz · BMW · Audi जांच","cat_fuelkr":"कोरिया में ईंधन के दाम","d_aaai":"अपने AI सहायक बनाएँ और अकेले या टीम में बात करें। डेटा आपके फ़ोन में रहता है।","d_autoreport":"कार रिपेयर शॉप के लिए कोटेशन, जॉब शीट और सर्विस हिस्ट्री।","d_aacalc":"यूनिट और करेंसी कन्वर्टर वाला सरल कैलकुलेटर। ऑफ़लाइन काम करता है।","d_moffee":"कैफ़े और दुकानों के लिए ऑर्डर और रसीद प्रिंटिंग। ऑफ़लाइन चलता है।","d_bgaa":"दुकानों और कैफ़े के लिए कॉपीराइट-सुरक्षित बैकग्राउंड संगीत।","d_scanner":"Mercedes-Benz, BMW और Audi के लिए गहन डायग्नोस्टिक्स और कोडिंग।","d_nammanthuk":"थाईलैंड में ईंधन की कीमतें, पास के पंप और स्टॉक अपडेट।","d_aafranchise":"थाई फ्रेंचाइज़ खोजें और निवेश की तुलना करें।","d_fuelkr":"कोरिया के ड्राइवरों के लिए ईंधन की कीमतें और पास के पेट्रोल पंप। विकास में।"}};window.HUB_LANGS=["th", "en", "ko", "zh", "hi"];</script>
+<script src="/assets/hub.js?v=8"></script>
+</body>
+</html>

@@ -1,9 +1,47 @@
-# MOTOR AA hub
+# MOTOR AA regional hubs
 
-One landing page (https://motoraathailand.github.io/) that lists every MOTOR AA app and links each one to its own introduction page.
-Static, no ads, no trackers, no external requests. Languages th/en/ko/zh/hi (`?lang=` > saved choice > browser language > English).
+Three **independent** static app hubs, with no cross-links between regions:
 
-- `tools/build.py` renders `index.html` + `assets/strings.js` from the app list and strings (`python3 tools/build.py`; add `--fonts` to rebuild font subsets).
-- Apps with a live intro page (`live=True` in `tools/build.py`) get a link card. Others are shown as "Coming soon" without a link. Flip `live` and set `url` when an app's intro page goes live, then rebuild.
-- `motion.css` / `motion.js` are byte copies of the shared motion standard. Icons in `icons/` are copies from each app's own site/assets (the hub never hot-links other sites' files).
-- Contact: motoraathailand@gmail.com. Fonts: IBM Plex (OFL), Noto subsets (OFL).
+- `/` — Worldwide, English by default; global apps only.
+- `/kr/` — Korea + Worldwide, Korean by default; global and Korea-only apps.
+- `/th/` — Thailand + Worldwide, Thai by default; global and Thailand-only apps.
+
+Published at <https://motoraathailand.github.io/>. Language choices are scoped to
+each regional page. `?lang=` temporarily overrides the selected language;
+otherwise the last choice for that region wins. The fallback is always the
+region's default language rather than browser detection.
+
+## Build
+
+```sh
+python3 tools/build.py
+# Only when translated text changes and Noto source fonts are installed:
+python3 tools/build.py --fonts
+```
+
+`tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
+renders the three `index.html` files and `sitemap.xml`. App cards have a region
+of `global`, `kr`, or `th`. `live=True` adds that app's introduction URL;
+otherwise it is a non-linked, in-development card. `주유소를부탁해` is Korea-only
+and awaits its introduction URL.
+
+`assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is
+transparent winged-AA-only line art cropped from the supplied reference; the
+curved MOTOR AA / SARABURI lettering is excluded. Every page loads those assets
+through root-relative `/assets` and `/icons` paths, so the same file works at all three URLs.
+`hub.js` does not navigate between pages. Contact: motoraathailand@gmail.com.
+
+Fonts are self-hosted IBM Plex Sans and Noto subsets (SIL OFL); no ad, analytics,
+or tracker requests. `motion.css` / `motion.js` are copies of the shared standard.
+A pre-rebuild archive is stored outside the repository in
+`/workspace/hub-backups/hub-before-regional-tropical-20261106-2036.tar.gz`.
+
+## Verify
+
+```sh
+python3 tools/verify.py
+```
+
+The verification fails on missing or incorrect apps per region, internal hub
+cross-links, wrong default languages, non-winged-AA header images, broken local
+asset paths, or sitemap omissions.

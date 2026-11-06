@@ -1,239 +1,266 @@
 #!/usr/bin/env python3
-"""Builds index.html, assets/strings.js, assets/fonts.css and font subsets for the MOTOR AA hub."""
-import json, os, html, subprocess, sys
+"""Build the independent Worldwide, Korea and Thailand MOTOR AA app hubs.
+
+Run ``python3 tools/build.py``. Add ``--fonts`` to refresh the self-hosted
+Korean, Chinese and Devanagari subsets after changing translated copy.
+"""
+import html
+import json
+import os
+import subprocess
+import sys
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SITE = "https://motoraathailand.github.io"
 EMAIL = "motoraathailand@gmail.com"
 LANGS = [("th", "ไทย"), ("en", "English"), ("ko", "한국어"), ("zh", "中文"), ("hi", "हिन्दी")]
-
-# live = linked intro page (verified HTTP 200 before publishing). soon = no link.
-APPS = [
- dict(id="aaai", name="AAAi", icon="icons/aaai.svg", url="https://aaai-iji8.onrender.com/about", live=True,
-      c="#5b4ee8", ink="#5b4ee8", soft="#f1effe", d="#8f86ff", dsoft="#25224a"),
- dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.svg", url="https://motoraathailand.github.io/nammanthuk-site/", live=True,
-      c="#0c635c", ink="#0c635c", soft="#e6f4f2", d="#2dd4bf", dsoft="#123532"),
- dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True,
-      c="#d9480f", ink="#b33a0a", soft="#fdeee6", d="#ff8a4c", dsoft="#3a1d10"),
- dict(id="aacalc", name="AA Calc", icon="icons/aacalc.svg", url="https://motoraathailand.github.io/aacalc-site/", live=True,
-      c="#1ea869", ink="#0f7a4b", soft="#e3f6ec", d="#3ddc97", dsoft="#14301f"),
- dict(id="moffee", name="Moffee", icon="icons/moffee.svg", url="https://motoraathailand.github.io/moffee-site/", live=True,
-      c="#2563eb", ink="#1d4ed8", soft="#e8effd", d="#6ea0ff", dsoft="#172444"),
- dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True,
-      c="#be185d", ink="#9d174d", soft="#fde7f1", d="#f472b6", dsoft="#3a1226"),
- dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True,  # intro HTTP 200 verified 2026-11-05
-      c="#00a7b0", ink="#00717a", soft="#e0f6f7", d="#2fd4db", dsoft="#0f3a3d"),
- dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True,  # formerly "AA Scanner Lite" (renamed 2026-11-02); icon from app 2026-11-04
-      c="#14a88a", ink="#0b7a64", soft="#e2f7f2", d="#4fe3c1", dsoft="#0f3530"),
+PAGES = [
+    {"slug": "world", "path": "", "default": "en", "regions": ("global",), "label": "Worldwide"},
+    {"slug": "kr", "path": "kr/", "default": "ko", "regions": ("global", "kr"), "label": "Korea + Worldwide"},
+    {"slug": "th", "path": "th/", "default": "th", "regions": ("global", "th"), "label": "Thailand + Worldwide"},
 ]
 
-S = {  # th, en, ko, zh, hi
- "doc_title": ["MOTOR AA — แอปทั้งหมดของเรา", "MOTOR AA — All our apps", "MOTOR AA — 모든 앱", "MOTOR AA — 我们的全部应用", "MOTOR AA — हमारे सभी ऐप"],
- "kicker": ["MOTOR AA", "MOTOR AA", "MOTOR AA", "MOTOR AA", "MOTOR AA"],
- "h1": ["แอปทั้งหมดของเรา|อยู่ที่เดียว", "All our apps,|in one place", "내 모든 앱을|한곳에서", "我们的全部应用，|一站直达", "हमारे सभी ऐप,|एक ही जगह"],
- "sub": ["เลือกแอปที่สนใจ|แล้วไปที่หน้าแนะนำ|ของแอปนั้นได้เลย", "Pick an app to open its own introduction page.", "앱을 고르면 해당 앱의 소개 페이지로 이동해요.", "选择一个应用，|即可打开它的介绍页面。", "कोई ऐप चुनें और उसका परिचय पेज खोलें।"],
- "chips_free": ["ใช้ฟรี", "Free", "무료", "免费", "मुफ़्त"],
- "chips_noads": ["ไม่มีโฆษณา", "No ads", "광고 없음", "无广告", "कोई विज्ञापन नहीं"],
- "chips_notrack": ["ไม่มีตัวติดตาม", "No trackers", "추적 없음", "无追踪", "कोई ट्रैकर नहीं"],
- "apps_h": ["แอปของเรา", "Our apps", "앱 목록", "我们的应用", "हमारे ऐप"],
- "open": ["ไปที่หน้าแนะนำ", "Open intro page", "소개 페이지 열기", "打开介绍页", "परिचय पेज खोलें"],
- "soon_h": ["เร็ว ๆ นี้", "Coming soon", "곧 만나요", "即将推出", "जल्द आ रहा है"],
- "soon_sub": ["แอปเหล่านี้กำลังเตรียม|หน้าแนะนำ ยังไม่เปิดให้เข้า", "These apps are getting their intro pages ready.", "이 앱들은 소개 페이지를 준비하고 있어요.", "这些应用的介绍页|正在准备中。", "इन ऐप के परिचय पेज तैयार हो रहे हैं।"],
- "soon_badge": ["เร็ว ๆ นี้", "Coming soon", "곧 공개", "即将推出", "जल्द ही"],
- "dev_badge": ["กำลังพัฒนา", "In development", "개발 중", "开发中", "विकासाधीन"],
- "contact_h": ["ติดต่อเรา", "Contact", "문의", "联系我们", "संपर्क"],
- "contact_p": ["ข้อเสนอแนะหรือคำถามเกี่ยวกับแอป|ส่งอีเมลหาเราได้เลย", "Feedback or questions about any app? Email us.", "앱에 대한 의견이나 질문은 메일로 보내 주세요.", "对任何应用有意见或疑问，|欢迎发邮件给我们。", "किसी भी ऐप पर सुझाव या सवाल? हमें ईमेल करें।"],
- "email_btn": ["ส่งอีเมล", "Send email", "메일 보내기", "发送邮件", "ईमेल भेजें"],
- "lang": ["ภาษา", "Language", "언어", "语言", "भाषा"],
- "footer": ["ไม่มีโฆษณา ไม่มีตัวติดตาม|หน้าเว็บนี้เป็นไฟล์คงที่", "No ads, no trackers. This page is fully static.", "광고 없음, 추적 없음. 이 페이지는 정적 파일이에요.", "无广告、无追踪。|本页为纯静态页面。", "कोई विज्ञापन नहीं, कोई ट्रैकर नहीं। यह पेज पूरी तरह स्थिर है।"],
- "home": ["MOTOR AA หน้าแรก", "MOTOR AA home", "MOTOR AA 홈", "MOTOR AA 首页", "MOTOR AA होम"],
- # categories
- "cat_aaai": ["ผู้ช่วย AI", "AI assistants", "AI 비서", "AI 助手", "AI सहायक"],
- "cat_autoreport": ["อู่ซ่อมรถ", "Car repair shops", "정비소", "汽修店", "कार रिपेयर शॉप"],
- "cat_nammanthuk": ["ราคาน้ำมัน", "Fuel prices", "주유소 가격", "油价", "ईंधन के दाम"],
- "cat_aacalc": ["เครื่องคิดเลข", "Calculator", "계산기", "计算器", "कैलकुलेटर"],
- "cat_moffee": ["POS รับออเดอร์", "POS & orders", "POS·주문", "POS 点单", "POS ऑर्डर"],
- "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रैंचाइज़"],
- "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
- "cat_scanner": ["Benz · BMW · Audi วิเคราะห์และโค้ดดิ้ง", "Benz · BMW · Audi diagnostics & coding", "벤츠·BMW·아우디 진단·코딩", "奔驰·宝马·奥迪 诊断与编码", "Benz · BMW · Audi डायग्नोस्टिक्स और कोडिंग"],
- # one-liners
- "d_aaai": ["สร้างผู้ช่วย AI ได้หลายตัว|คุยทีละตัว หรือรวมทีมในห้องกลุ่ม|ข้อมูลอยู่ในเครื่องคุณ",
-            "Create your own AI assistants and chat one-on-one or team them up in a group room. Your data stays on your phone.",
-            "나만의 AI 비서를 여러 개 만들어 1:1로 대화하거나 단체방에서 함께 일하게 해요. 데이터는 내 폰에만 저장돼요.",
-            "创建多个专属 AI 助手，|可单独聊天，也可拉进群聊协作。|数据只保存在你的手机上。",
-            "अपने कई AI सहायक बनाएँ, अकेले बात करें या ग्रुप रूम में साथ काम कराएँ। डेटा आपके फ़ोन में रहता है।"],
- "d_autoreport": ["ใบเสนอราคาและใบสั่งงานสำหรับอู่ซ่อมรถ|เก็บประวัติซ่อมตามทะเบียน พิมพ์ A4 / PDF|ใช้ฟรี ข้อมูลอยู่ใน Google Drive ของคุณ",
-            "Quotes and job sheets for car repair shops. Keep service history by licence plate and print A4 or share PDF. Free, and your data stays in your own Google Drive.",
-            "정비소용 견적서·작업지시서 앱. 차량번호별 정비 이력을 보관하고 A4 인쇄·PDF 공유까지. 무료이고 데이터는 내 Google Drive에 저장돼요.",
-            "汽修店报价单和工单应用。|按车牌保存维修记录，A4 打印或分享 PDF。|免费，数据保存在您自己的 Google Drive。",
-            "कार रिपेयर शॉप के लिए कोटेशन और जॉब शीट। नंबर प्लेट के अनुसार सर्विस इतिहास रखें, A4 प्रिंट या PDF शेयर करें। मुफ़्त, डेटा आपके अपने Google Drive में।"],
- "d_nammanthuk": ["ดูราคาน้ำมันวันนี้|ปั๊มใกล้คุณบนแผนที่|และสถานะน้ำมัน มี/ใกล้หมด/หมด|จากผู้ใช้ด้วยกัน",
-            "Today's fuel prices in Thailand, nearby stations on a map, and live stock status shared by other drivers.",
-            "태국의 오늘 유가, 지도 위 가까운 주유소, 다른 운전자가 알려 주는 재고 상태를 한눈에 봐요.",
-            "查看泰国今日油价、|地图上的附近加油站，|以及其他车主分享的油品库存状态。",
-            "थाईलैंड में आज के ईंधन दाम, नक्शे पर पास के पंप और दूसरे ड्राइवरों से स्टॉक की स्थिति।"],
- "d_aacalc": ["เครื่องคิดเลขพร้อมแปลงหน่วยและแปลงสกุลเงิน|ใช้ออฟไลน์ได้|ไม่ต้องล็อกอิน",
-            "A simple calculator with unit and currency converters. Works offline, no login needed.",
-            "단위 변환과 환율 변환이 들어 있는 간단한 계산기. 오프라인에서 쓰고 로그인이 필요 없어요.",
-            "带单位换算和汇率换算的简洁计算器。|可离线使用，无需登录。",
-            "यूनिट और करेंसी कन्वर्टर वाला सरल कैलकुलेटर। ऑफ़लाइन चलता है, लॉगिन नहीं चाहिए।"],
- "d_moffee": ["แอปรับออเดอร์และพิมพ์ใบเสร็จหน้าร้าน|สำหรับร้านกาแฟ ร้านอาหาร และร้านค้า|ใช้ได้แม้ออฟไลน์ ใช้ฟรี",
-            "Counter ordering and receipt printing for cafés, restaurants and shops. Works offline, free to use.",
-            "카페·음식점·상점을 위한 카운터 주문·영수증 출력 앱. 오프라인 지원, 무료.",
-            "适用于咖啡馆、餐厅和商店的|柜台点单与小票打印应用。|支持离线，免费使用。",
-            "कैफ़े, रेस्तरां और दुकानों के लिए काउंटर ऑर्डर और रसीद प्रिंटिंग ऐप। ऑफ़लाइन चलता है, मुफ़्त।"],
- "d_aafranchise": ["ค้นหาและเทียบแฟรนไชส์ไทย 697 แบรนด์|ดูเงินลงทุน ค่าสิทธิ์ และระยะคืนทุน|มีตัวช่วยหางบ ใช้ฟรี เฉพาะประเทศไทย",
-            "Browse 697 Thai franchise brands, compare their costs and find ones that fit your budget. Free, Thailand only.",
-            "태국 프랜차이즈 697개 브랜드를 찾아 비용을 비교하고 예산에 맞는 곳을 골라요. 무료, 태국 전용.",
-            "查找泰国 697 个加盟品牌，|比较各品牌的成本，|按预算挑选。免费，仅限泰国。",
-            "थाईलैंड के 697 फ्रैंचाइज़ ब्रांड देखें, उनकी लागत की तुलना करें और बजट के हिसाब से चुनें। मुफ़्त, केवल थाईलैंड के लिए।"],
- "d_scanner": ["แอปวิเคราะห์เชิงลึกและโค้ดดิ้งฟรี|สำหรับ Benz, BMW และ Audi โดยเฉพาะ",
-            "A free in-depth diagnostics and coding app made just for Mercedes-Benz, BMW and Audi.",
-            "벤츠·BMW·아우디 전용 무료 정밀진단 및 코딩 앱.",
-            "专为奔驰、宝马和奥迪打造的|免费深度诊断与编码应用。",
-            "Mercedes-Benz, BMW और Audi के लिए खास, मुफ़्त गहन डायग्नोस्टिक्स और कोडिंग ऐप।"],
- "d_bgaa": ["เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์|เลือกเพลย์ลิสต์ หรือถ่ายรูปร้านเพื่อรับเพลงที่เข้ากัน|โดยใช้คีย์ AI ของคุณเอง ฟังเพลงได้แม้ไม่มีคีย์",
-            "Copyright-safe background music for shops and cafés. Pick a playlist, or photograph your shop and get music that fits, using your own AI key. Music plays without a key.",
-            "저작권 걱정 없는 매장 배경음악. 플레이리스트를 고르거나 가게 사진을 찍으면 어울리는 음악을 추천해요. 사진 분석은 내 AI 키로 하고, 키가 없어도 음악은 들을 수 있어요.",
-            "版权安全的店铺背景音乐。|选择播放列表，或拍下店铺照片，|用你自己的 AI 密钥获得合适的音乐。|没有密钥也能听音乐。",
-            "दुकानों के लिए कॉपीराइट-सुरक्षित बैकग्राउंड संगीत। प्लेलिस्ट चुनें, या दुकान की फ़ोटो लेकर अपनी AI कुंजी से सही संगीत पाएँ। कुंजी के बिना भी संगीत चलता है।"],
- "d_assistant": ["ผู้ช่วย AI ฟรี สร้างบอตของตัวเอง ใช้คีย์ AI ของคุณเอง",
-            "A free AI assistant app: build your own bots and use your own AI keys.",
-            "무료 AI 비서 앱. 나만의 봇을 만들고 내 AI 키로 써요.",
-            "免费 AI 助手应用：创建自己的机器人，使用你自己的 AI 密钥。",
-            "मुफ़्त AI सहायक ऐप: अपने बॉट बनाएँ और अपनी AI कुंजियाँ इस्तेमाल करें।"],
+# Global apps appear on every hub. Country-specific apps are never rendered on
+# another country's page. A live card links only to that app's external intro.
+APPS = [
+    dict(id="aaai", name="AAAi", icon="icons/aaai.svg", url="https://aaai-iji8.onrender.com/about", live=True),
+    dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True),
+    dict(id="aacalc", name="AA Calc", icon="icons/aacalc.svg", url="https://motoraathailand.github.io/aacalc-site/", live=True),
+    dict(id="moffee", name="Moffee", icon="icons/moffee.svg", url="https://motoraathailand.github.io/moffee-site/", live=True),
+    dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True),
+    dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True),
+    dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.svg", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th"),
+    dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
+    dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.svg", url=None, live=False, dev=True, region="kr"),
+]
+for app in APPS:
+    app.setdefault("region", "global")
+
+PALETTES = {
+    "aaai": ("#eaa3aa", "#f4c6c1", "#66353e"),
+    "autoreport": ("#ed967f", "#f4baa1", "#703b31"),
+    "aacalc": ("#ee9c7f", "#f5c19e", "#6c3b29"),
+    "moffee": ("#f5dfc7", "#fff0dc", "#704735"),
+    "bgaa": ("#eeb4a9", "#f7d4c1", "#6c3c35"),
+    "scanner": ("#e99b8d", "#f4c4ae", "#693a30"),
+    "nammanthuk": ("#de7869", "#ef9c82", "#fffaf6"),
+    "aafranchise": ("#df7768", "#efa285", "#fffaf6"),
+    "fuelkr": ("#edab98", "#f8cfb8", "#663c30"),
 }
+
+# Text order is th, en, ko, zh, hi. Pipes are optional phrase-break hints.
+S = {
+    "doc_title": ["MOTOR AA — แอปทั้งหมดของเรา", "MOTOR AA — All our apps", "MOTOR AA — 모든 앱", "MOTOR AA — 我们的全部应用", "MOTOR AA — हमारे सभी ऐप"],
+    "region_world": ["แอปสำหรับทั่วโลก", "Worldwide apps", "전 세계 앱", "全球应用", "दुनिया भर के ऐप"],
+    "region_kr": ["เกาหลี + ทั่วโลก", "Korea + Worldwide", "한국 + 전 세계", "韩国 + 全球", "कोरिया + दुनिया भर"],
+    "region_th": ["ไทย + ทั่วโลก", "Thailand + Worldwide", "태국 + 전 세계", "泰国 + 全球", "थाईलैंड + दुनिया भर"],
+    "h1": ["แอปที่คุณชื่นชอบ|อยู่ที่เดียว", "Everyday apps,|one sunny place", "일상의 앱을|한곳에", "日常应用，|一站直达", "आपके रोज़मर्रा के ऐप,|एक ही जगह"],
+    "sub": ["เลือกแอปที่ใช่ แล้วเปิดหน้าแนะนำได้เลย", "Find your next everyday essential, wrapped in a little tropical warmth.", "필요한 앱을 고르고 소개 페이지를 만나 보세요.", "选择所需应用，打开它的介绍页面。", "अपना अगला ज़रूरी ऐप चुनें और उसका परिचय पेज खोलें।"],
+    "chips_free": ["ใช้ฟรี", "Free to use", "무료 사용", "免费使用", "मुफ़्त"],
+    "chips_noads": ["ไม่มีโฆษณา", "No ads", "광고 없음", "无广告", "कोई विज्ञापन नहीं"],
+    "chips_notrack": ["ไม่มีตัวติดตาม", "No trackers", "추적 없음", "无追踪", "कोई ट्रैकर नहीं"],
+    "apps_h": ["แอปของเรา", "Our apps", "앱 둘러보기", "我们的应用", "हमारे ऐप"],
+    "local_h": ["สำหรับประเทศไทย", "Made for Thailand", "한국을 위한 앱", "本地应用", "आपके क्षेत्र के लिए"],
+    "open": ["ดูรายละเอียด", "Explore app", "자세히 보기", "查看详情", "ऐप देखें"],
+    "soon_h": ["กำลังเตรียมให้บริการ", "On the horizon", "곧 만나요", "即将推出", "जल्द आ रहा है"],
+    "soon_sub": ["แอปใหม่กำลังอยู่ระหว่างการพัฒนา", "Something new is taking shape.", "새로운 앱을 준비하고 있어요.", "新应用正在准备中。", "कुछ नया तैयार हो रहा है।"],
+    "soon_badge": ["เร็ว ๆ นี้", "Coming soon", "곧 공개", "即将推出", "जल्द ही"],
+    "dev_badge": ["กำลังพัฒนา", "In development", "개발 중", "开发中", "विकासाधीन"],
+    "contact_h": ["มาคุยกัน", "Let’s talk", "문의하기", "联系我们", "बात करें"],
+    "contact_p": ["ข้อเสนอแนะหรือคำถาม ส่งอีเมลหาเราได้เลย", "A question, an idea, or just want to say hello?", "앱에 대한 의견이나 질문을 보내 주세요.", "有任何意见或问题，欢迎发邮件给我们。", "कोई सवाल या सुझाव? हमें ईमेल करें।"],
+    "email_btn": ["ส่งอีเมล", "Send email", "메일 보내기", "发送邮件", "ईमेल भेजें"],
+    "lang": ["ภาษา", "Language", "언어", "语言", "भाषा"],
+    "footer": ["ไม่มีโฆษณา ไม่มีตัวติดตาม เว็บไซต์แบบสแตติก", "No ads, no trackers. Always a little sunshine.", "광고 없음, 추적 없음. 정적 웹사이트예요.", "无广告、无追踪。纯静态网站。", "कोई विज्ञापन नहीं, कोई फ़ाइल ट्रैकर नहीं।"],
+    "home": ["MOTOR AA หน้าแรก", "MOTOR AA home", "MOTOR AA 홈", "MOTOR AA 首页", "MOTOR AA होम"],
+    "cat_aaai": ["ผู้ช่วย AI", "AI assistants", "AI 비서", "AI 助手", "AI सहायक"],
+    "cat_autoreport": ["อู่ซ่อมรถ", "Car repair shops", "정비소", "汽修店", "कार रिपेयर शॉप"],
+    "cat_nammanthuk": ["ราคาน้ำมันในประเทศไทย", "Fuel prices · Thailand", "태국 주유소 가격", "泰国油价", "थाईलैंड में ईंधन के दाम"],
+    "cat_aacalc": ["เครื่องคิดเลข", "Calculator", "계산기", "计算器", "कैलकुलेटर"],
+    "cat_moffee": ["POS รับออเดอร์", "POS & orders", "POS·주문", "POS 点单", "POS ऑर्डर"],
+    "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रेंचाइज़"],
+    "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
+    "cat_scanner": ["Benz · BMW · Audi", "Benz · BMW · Audi diagnostics", "벤츠·BMW·아우디 점검", "奔驰·宝马·奥迪诊断", "Benz · BMW · Audi जांच"],
+    "cat_fuelkr": ["주유소 가격 · 한국", "Fuel prices · Korea", "주유소 가격 · 한국", "韩国油价 · 韩国", "कोरिया में ईंधन के दाम"],
+    "d_aaai": ["สร้างผู้ช่วย AI ของคุณ คุยแบบตัวต่อตัวหรือรวมทีมในห้องกลุ่ม ข้อมูลอยู่ในเครื่องคุณ", "Create your own AI assistants, chat one-on-one or bring the team together. Your data stays on your phone.", "나만의 AI 비서를 만들고 1:1 또는 단체방에서 대화해요. 데이터는 내 폰에 저장돼요.", "创建你的专属 AI 助手，单独聊天或团队协作。数据保存在你的手机上。", "अपने AI सहायक बनाएँ और अकेले या टीम में बात करें। डेटा आपके फ़ोन में रहता है।"],
+    "d_autoreport": ["ใบเสนอราคา ใบสั่งงาน และประวัติซ่อมสำหรับอู่ พิมพ์ A4 หรือ PDF", "Quotes, job sheets and service history for car repair shops. Print A4 or share a PDF.", "정비소를 위한 견적서·작업지시서·정비 이력. A4 인쇄와 PDF 공유를 지원해요.", "汽修店报价单、工单与维修记录，支持 A4 打印和 PDF 分享。", "कार रिपेयर शॉप के लिए कोटेशन, जॉब शीट और सर्विस हिस्ट्री।"],
+    "d_aacalc": ["เครื่องคิดเลข แปลงหน่วยและสกุลเงิน ใช้ออฟไลน์ได้โดยไม่ต้องล็อกอิน", "A simple calculator with unit and currency converters. Works offline, no login needed.", "단위 변환과 환율 변환을 지원하는 계산기. 오프라인에서도 로그인 없이 사용해요.", "简洁的计算器，带单位与汇率换算。可离线使用，无需登录。", "यूनिट और करेंसी कन्वर्टर वाला सरल कैलकुलेटर। ऑफ़लाइन काम करता है।"],
+    "d_moffee": ["รับออเดอร์และพิมพ์ใบเสร็จสำหรับร้านกาแฟและร้านอาหาร ใช้ออฟไลน์ได้", "Counter ordering and receipt printing for cafés, restaurants and shops. Works offline.", "카페·음식점·상점을 위한 주문·영수증 출력 앱. 오프라인에서도 사용할 수 있어요.", "适用于咖啡馆、餐厅和商店的点单与小票打印。支持离线使用。", "कैफ़े और दुकानों के लिए ऑर्डर और रसीद प्रिंटिंग। ऑफ़लाइन चलता है।"],
+    "d_bgaa": ["เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์ เลือกเพลย์ลิสต์ที่เข้ากับบรรยากาศร้าน", "Copyright-safe background music for shops and cafés. Pick a playlist that fits the mood.", "저작권 걱정 없는 매장 배경음악. 가게 분위기에 어울리는 플레이리스트를 골라 보세요.", "适用于商店和咖啡馆的版权安全背景音乐。", "दुकानों और कैफ़े के लिए कॉपीराइट-सुरक्षित बैकग्राउंड संगीत।"],
+    "d_scanner": ["วิเคราะห์เชิงลึกและโค้ดดิ้งสำหรับ Mercedes-Benz, BMW และ Audi", "In-depth diagnostics and coding for Mercedes-Benz, BMW and Audi.", "벤츠·BMW·아우디를 위한 정밀진단 및 코딩 앱.", "专为奔驰、宝马和奥迪打造的深度诊断与编码应用。", "Mercedes-Benz, BMW और Audi के लिए गहन डायग्नोस्टिक्स और कोडिंग।"],
+    "d_nammanthuk": ["ดูราคาน้ำมัน ปั๊มใกล้คุณ และสถานะน้ำมันจากผู้ใช้ในประเทศไทย", "Fuel prices, nearby stations and driver-shared stock updates across Thailand.", "태국의 유가, 가까운 주유소와 운전자가 공유하는 재고 정보를 확인해요.", "查看泰国油价、附近加油站以及车主分享的油品库存。", "थाईलैंड में ईंधन की कीमतें, पास के पंप और स्टॉक अपडेट।"],
+    "d_aafranchise": ["ค้นหาและเปรียบเทียบแฟรนไชส์ไทย ดูเงินลงทุนและระยะคืนทุน", "Discover and compare Thai franchises, from investment to payback period.", "태국 프랜차이즈의 투자 비용과 투자 회수 기간을 비교해 보세요.", "发现泰国加盟品牌，比较投资额与回本周期。", "थाई फ्रेंचाइज़ खोजें और निवेश की तुलना करें।"],
+    "d_fuelkr": ["ข้อมูลราคาน้ำมันและปั๊มใกล้เคียงสำหรับผู้ขับขี่ในเกาหลี กำลังอยู่ระหว่างการพัฒนา", "Fuel prices and nearby stations for drivers in Korea. Currently in development.", "한국 운전자를 위한 유가와 가까운 주유소 정보. 현재 개발 중이에요.", "为韩国司机提供油价和附近加油站信息，目前正在开发中。", "कोरिया के ड्राइवरों के लिए ईंधन की कीमतें और पास के पेट्रोल पंप। विकास में।"],
+}
+
 
 def i18n_js():
-    out = {}
-    for k, v in S.items():
+    result = {}
+    for key, strings in S.items():
         for i, (code, _) in enumerate(LANGS):
-            out.setdefault(code, {})[k] = v[i]
-    return out
+            result.setdefault(code, {})[key] = strings[i]
+    return result
+
 
 ICONS = {
- "globe": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.700 3.900 9S14.600 18.300 12 21c-2.600-2.700-3.900-5.700-3.900-9S9.400 5.700 12 3z"/></svg>',
- "arrow": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
- "clock": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
- "mail": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>',
- "check": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.500 4.500 4.500L19 7.500"/></svg>',
- "shield": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.500 3 8 7 10 4-2 7-5.500 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',
- "gift": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M12 9v11M3 9h18M12 9c-3 0-4.500-1-4.500-2.500S8.500 4 10 4c1.500 0 2 2 2 5zm0 0c3 0 4.500-1 4.500-2.500S15.500 4 14 4c-1.500 0-2 2-2 5z"/></svg>',
- "eye": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.600 6.100A9.500 9.500 0 0 1 12 6c5 0 8.500 4.500 9.500 6a14 14 0 0 1-3 3.400M6.600 6.700A14 14 0 0 0 2.500 12C3.500 13.500 7 18 12 18c1.400 0 2.700-.4 3.800-.9"/><path d="M9.900 9.900a3 3 0 0 0 4.200 4.200"/></svg>',
+    "globe": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9S14.6 18.3 12 21c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg>',
+    "arrow": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    "clock": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    "mail": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg>',
+    "check": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+    "spark": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg>',
+    "sun": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>',
+    "shield": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',
 }
-def ic(n, cls="ic"): return ICONS[n].replace("<svg ", f'<svg class="{cls}" ', 1)
 
-def card(a, idx):
-    n = html.escape(a["name"])
-    style = f'--c:{a["c"]};--a-ink:{a["ink"]};--a-soft:{a["soft"]};--dc:{a["d"]};--a-dsoft:{a["dsoft"]};--i:{idx}'
-    img = f'<span class="app-ic"><img src="{a["icon"]}" alt="" width="64" height="64" decoding="async"></span>'
-    head = (f'{img}<span class="app-txt"><span class="app-name">{n}</span>'
-            f'<span class="cat" data-i18n="cat_{a["id"]}">{html.escape(S["cat_"+a["id"]][1])}</span></span>')
-    desc = f'<span class="desc" data-i18n="d_{a["id"]}">{html.escape(S["d_"+a["id"]][1])}</span>'
-    if a["live"]:
-        cta = f'<span class="cta"><span data-i18n="open">{S["open"][1]}</span>{ic("arrow")}</span>'
-        return (f'<li class="m-stagger" style="{style}"><a class="card" href="{a["url"]}" data-app="{a["id"]}" data-press data-ripple>'
-                f'<span class="top">{head}</span>{desc}{cta}</a></li>')
-    bk = "dev_badge" if a.get("dev") else "soon_badge"
-    cta = f'<span class="cta soon-b">{ic("clock")}<span data-i18n="{bk}">{S[bk][1]}</span></span>'
-    return (f'<li data-reveal style="{style};--i:{idx-len([x for x in APPS if x["live"]])}"><div class="card soon" data-app="{a["id"]}" aria-disabled="true">'
-            f'<span class="top">{head}</span>{desc}{cta}</div></li>')
 
-def build():
-    live = [a for a in APPS if a["live"]]; soon = [a for a in APPS if not a["live"]]
-    cards = "".join(card(a, 4 + i) for i, a in enumerate(live))
-    soons = "".join(card(a, 4 + len(live) + i) for i, a in enumerate(soon))
-    langs = "".join(f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if c=="zh" else c}" data-set-lang="{c}">{ic("check","ic tick")}<span>{n}</span></button></li>' for c, n in LANGS)
-    dots = "".join(f'<i style="background:{a["c"]};--i:{k}"></i>' for k, a in enumerate(APPS))
-    def pic(w, h, cls, name="logo"):
-        return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="icons/{name}-dark.png?v=3">'
-                f'<img class="{cls}" src="icons/{name}.png?v=3" alt="MOTOR AA" width="{w}" height="{h}" decoding="async"></picture>')
-    logo_hdr = pic(98, 24, "logo-h", "logo-mark").replace('alt="MOTOR AA"', 'alt=""')
-    logo_hero = pic(300, 247, "logo-big")
-    page = f'''<!doctype html>
-<html lang="en">
+def icon(name, extra=""):
+    return ICONS[name].replace("<svg ", f'<svg class="ic {extra}" ', 1)
+
+
+def card(app, index, default_index):
+    start, end, ink = PALETTES[app["id"]]
+    style = f"--card-start:{start};--card-end:{end};--card-ink:{ink};--i:{index}"
+    name = html.escape(app["name"])
+    category = S["cat_" + app["id"]][default_index]
+    description = S["d_" + app["id"]][default_index]
+    copy = f'''<span class="app-copy">
+  <span class="cat" data-i18n="cat_{app['id']}">{html.escape(category)}</span>
+  <span class="app-name">{name}</span>
+  <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
+</span>'''
+    picture = f'''<span class="app-ic"><img src="/{app['icon']}" alt="" width="96" height="96" decoding="async"></span>'''
+    palm = '<svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg>'
+    if app["live"]:
+        action = f'<span class="cta"><span data-i18n="open">{S["open"][default_index]}</span>{icon("arrow")}</span>'
+        return f'''<li class="m-stagger" style="{style}">
+<a class="card" href="{app['url']}" data-app="{app['id']}" data-press data-ripple>{palm}{copy}{picture}{action}</a>
+</li>'''
+    action = f'<span class="cta status">{icon("clock")}<span data-i18n="dev_badge">{S["dev_badge"][default_index]}</span></span>'
+    return f'''<li class="m-stagger" style="{style}">
+<div class="card soon" data-app="{app['id']}" aria-disabled="true">{palm}{copy}{picture}{action}</div>
+</li>'''
+
+
+def render_page(page):
+    apps = [a for a in APPS if a["region"] in page["regions"]]
+    live = [a for a in apps if a["live"]]
+    upcoming = [a for a in apps if not a["live"]]
+    index = LANGS.index(next(item for item in LANGS if item[0] == page["default"]))
+    url = SITE + "/" + page["path"]
+    title = S["doc_title"][index]
+    region = S["region_" + page["slug"]][index]
+    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(live))
+    upcoming_markup = ""
+    if upcoming:
+        soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(upcoming))
+        upcoming_markup = f'''<section class="soon-section" aria-labelledby="soonH">
+<h2 id="soonH" class="section-title" data-i18n="soon_h">{S["soon_h"][index]}</h2>
+<p class="section-sub" data-i18n="soon_sub">{S["soon_sub"][index]}</p>
+<ul class="app-grid">{soon_cards}</ul>
+</section>'''
+    languages = "\n".join(
+        f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if code == "zh" else code}" data-set-lang="{code}">{icon("check", "tick")}<span>{name}</span></button></li>'
+        for code, name in LANGS
+    )
+    logo = '<picture><source media="(prefers-color-scheme: dark)" srcset="/icons/logo-mark-dark.png"><img src="/icons/logo-mark.png" alt="AA" width="180" height="45"></picture>'
+    return f'''<!doctype html>
+<html lang="{page['default']}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MOTOR AA — All our apps</title>
-<meta name="description" content="MOTOR AA: every app in one place. Pick an app to open its introduction page. Free, no ads, no trackers.">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0e0e12" media="(prefers-color-scheme: dark)">
-<meta name="color-scheme" content="light dark">
-<link rel="canonical" href="https://motoraathailand.github.io/">
-<meta property="og:type" content="website"><meta property="og:site_name" content="MOTOR AA"><meta property="og:title" content="MOTOR AA — All our apps"><meta property="og:description" content="Every MOTOR AA app in one place. Pick an app to open its introduction page.">
-<meta property="og:url" content="https://motoraathailand.github.io/"><meta property="og:image" content="https://motoraathailand.github.io/assets/og.jpg?v=2">
+<title>{html.escape(title)}</title>
+<meta name="description" content="MOTOR AA — {html.escape(region)}. Pick an app to open its introduction page. No ads, no trackers.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#fffaf5">
+<link rel="canonical" href="{url}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MOTOR AA">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="Everyday apps in one sunny place.">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{SITE}/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="icons/favicon-32.png?v=4" type="image/png" sizes="32x32"><link rel="icon" href="icons/favicon-192.png?v=4" type="image/png" sizes="192x192"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=4">
-<link rel="stylesheet" href="assets/fonts.css">
-<link rel="stylesheet" href="motion.css">
-<link rel="stylesheet" href="assets/hub.css?v=6">
-<noscript><style>[data-reveal]{{opacity:1!important;transform:none!important}}</style></noscript>
+<link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/icons/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/motion.css">
+<link rel="stylesheet" href="/assets/hub.css?v=8">
 </head>
-<body>
-<div class="bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i></div>
+<body data-region="{page['slug']}">
+<div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
 <header class="bar">
- <a class="brand" href="./" aria-label="MOTOR AA" data-i18n-aria="home" data-press>{logo_hdr}<span>MOTOR AA</span></a>
+ <span class="region" data-i18n="region_{page['slug']}">{html.escape(region)}</span>
+ <span class="brand">{logo}</span>
  <div class="langwrap">
-  <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu" data-press data-ripple>{ic("globe")}<span id="langCur">English</span></button>
-  <ul class="lang-menu" id="langMenu" role="menu" hidden aria-label="Language">{langs}</ul>
+  <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu" aria-label="Language" data-press>{icon("globe")}<span id="langCur">{dict(LANGS)[page['default']]}</span></button>
+  <ul class="lang-menu" id="langMenu" role="menu" hidden aria-label="Language">{languages}</ul>
  </div>
 </header>
 <main data-lang-root>
  <section class="hero">
-  <div class="hero-logo m-stagger" style="--i:0">{logo_hero}</div>
-  <div class="hero-txt">
-  <h1 class="m-stagger" style="--i:1" data-i18n="h1">All our apps, in one place</h1>
-  <p class="sub m-stagger" style="--i:2" data-i18n="sub">Pick an app to open its own introduction page.</p>
-  <ul class="chips m-stagger" style="--i:3"><li>{ic("gift")}<span data-i18n="chips_free">Free to use</span></li><li>{ic("eye")}<span data-i18n="chips_noads">No ads here</span></li><li>{ic("shield")}<span data-i18n="chips_notrack">No trackers</span></li></ul>
-  </div>
+  <span class="eyebrow m-stagger" style="--i:0">{icon("spark")}<span data-i18n="region_{page['slug']}">{html.escape(region)}</span></span>
+  <h1 class="m-stagger" style="--i:1" data-i18n="h1">{html.escape(S['h1'][index])}</h1>
+  <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
+  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("sun")}<span data-i18n="chips_noads">{S['chips_noads'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
  </section>
  <section aria-labelledby="appsH">
-  <h2 id="appsH" class="sec" data-i18n="apps_h">Our apps</h2>
-  <ul class="grid" style="--m-stagger:45ms">{cards}</ul>
+  <h2 id="appsH" class="section-title" data-i18n="apps_h">{S['apps_h'][index]}</h2>
+  <ul class="app-grid">{cards}</ul>
  </section>
- <section aria-labelledby="soonH" class="soon-sec">
-  <h2 id="soonH" class="sec" data-reveal data-i18n="soon_h">Coming soon</h2>
-  <p class="soon-sub" data-reveal data-i18n="soon_sub">These apps are getting their intro pages ready.</p>
-  <ul class="grid" style="--m-stagger:45ms">{soons}</ul>
- </section>
- <section class="contact" data-reveal>
-  <div><h2 class="sec" data-i18n="contact_h">Contact</h2><p data-i18n="contact_p">Feedback or questions about any app? Email us.</p></div>
-  <a class="btn" href="mailto:{EMAIL}" data-press data-ripple>{ic("mail")}<span data-i18n="email_btn">Send email</span><b>{EMAIL}</b></a>
+ {upcoming_markup}
+ <section class="contact m-stagger" style="--i:6">
+  <span class="contact-icon">{icon("mail")}</span>
+  <div><h2 data-i18n="contact_h">{S['contact_h'][index]}</h2><p data-i18n="contact_p">{S['contact_p'][index]}</p></div>
+  <a class="btn" href="mailto:{EMAIL}" aria-label="{EMAIL}" data-press data-ripple><span data-i18n="email_btn">{S['email_btn'][index]}</span>{icon("arrow")}</a>
  </section>
 </main>
-<footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">No ads, no trackers. This page is fully static.</span></footer>
-<script src="motion.js"></script>
-<script src="assets/strings.js?v=7"></script>
-<script src="assets/hub.js?v=6"></script>
+<footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">{S['footer'][index]}</span></footer>
+<script>window.HUB_REGION={json.dumps(page['slug'])};window.HUB_DEFAULT={json.dumps(page['default'])};</script>
+<script src="/motion.js"></script>
+<script>window.HUB_STRINGS={json.dumps(i18n_js(), ensure_ascii=False, separators=(',', ':'))};window.HUB_LANGS={json.dumps([c for c, _ in LANGS])};</script>
+<script src="/assets/hub.js?v=8"></script>
 </body>
 </html>
 '''
-    page = page.replace('|', ' ')
-    open(os.path.join(ROOT, "index.html"), "w").write(page)
-    js = "window.HUB_STRINGS=" + json.dumps(i18n_js(), ensure_ascii=False, separators=(",", ":")) + ";window.HUB_LANGS=" + json.dumps([c for c, _ in LANGS]) + ";\n"
-    open(os.path.join(ROOT, "assets", "strings.js"), "w").write(js)
+
 
 def fonts():
-    """subset Noto Sans CJK SC / KR and Noto Sans Devanagari to this page's own text"""
-    texts = {c: "".join(S[k][i] for k in S) + "".join(n for _, n in LANGS) for i, (c, _) in enumerate(LANGS)}
-    allchars = "".join(texts.values()) + "".join(a["name"] for a in APPS) + "—·©→✓"
-    def sub(src, out, chars, num=None):
-        uni = ",".join(f"U+{ord(ch):04X}" for ch in sorted(set(chars)))
-        cmd = ["pyftsubset", src] + ([f"--font-number={num}"] if num is not None else []) + [f"--unicodes={uni}", "--flavor=woff2", f"--output-file={out}", "--layout-features=*"]
-        subprocess.check_call(cmd)
-    d = os.path.join(ROOT, "fonts")
-    cjk = {"SC": 2, "KR": 1}
-    # find ttc indexes by family name
-    from fontTools.ttLib import TTCollection
-    col = TTCollection("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"); colb = TTCollection("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc")
-    def idx(c, fam):
-        for i, f in enumerate(c.fonts):
-            if f["name"].getDebugName(1) == fam: return i
-    for w, c, tag in ((400, col, "Regular"), (700, colb, "Bold")):
-        sub(f"/usr/share/fonts/opentype/noto/NotoSansCJK-{tag}.ttc", f"{d}/noto-sc-{w}.woff2", texts["zh"] + "0123456789", idx(c, "Noto Sans CJK SC"))
-        sub(f"/usr/share/fonts/opentype/noto/NotoSansCJK-{tag}.ttc", f"{d}/noto-kr-{w}.woff2", texts["ko"] + "0123456789", idx(c, "Noto Sans CJK KR"))
-    sub("/usr/share/fonts/truetype/sand-box/google/Noto Sans Devanagari/NotoSansDevanagari-VariableFont_wdth,wght.ttf", f"{d}/noto-deva.woff2", texts["hi"], None)
+    """Subset installed Noto fonts to the hub's own Korean, Chinese and Hindi text."""
+    text = {code: "".join(S[key][i] for key in S) + name for i, (code, name) in enumerate(LANGS)}
+    for weight, tag in ((400, "Regular"), (700, "Bold")):
+        filename = f"/usr/share/fonts/opentype/noto/NotoSansCJK-{tag}.ttc"
+        if not os.path.isfile(filename):
+            print("Noto source fonts unavailable; keeping existing font subsets", file=sys.stderr)
+            return
+        from fontTools.ttLib import TTCollection
+        collection = TTCollection(filename)
+        for code, family, size in (("zh", "Noto Sans CJK SC", "sc"), ("ko", "Noto Sans CJK KR", "kr")):
+            font_index = next(i for i, font in enumerate(collection.fonts) if font["name"].getDebugName(1) == family)
+            characters = text[code] + "".join(name for _, name in LANGS) + "주유소를부탁해0123456789"
+            unicodes = ",".join(f"U+{ord(c):04X}" for c in sorted(set(characters)))
+            subprocess.check_call(["pyftsubset", filename, f"--font-number={font_index}", f"--unicodes={unicodes}", "--flavor=woff2", f"--output-file={ROOT}/fonts/noto-{size}-{weight}.woff2", "--layout-features=*"])
+    src = "/usr/share/fonts/truetype/sand-box/google/Noto Sans Devanagari/NotoSansDevanagari-VariableFont_wdth,wght.ttf"
+    characters = text["hi"] + "हिन्दी0123456789"
+    if os.path.isfile(src):
+        unicodes = ",".join(f"U+{ord(c):04X}" for c in sorted(set(characters)))
+        subprocess.check_call(["pyftsubset", src, f"--unicodes={unicodes}", "--flavor=woff2", f"--output-file={ROOT}/fonts/noto-deva.woff2", "--layout-features=*"])
+
+
+def build():
+    for page in PAGES:
+        directory = os.path.join(ROOT, page["path"])
+        os.makedirs(directory, exist_ok=True)
+        with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
+            f.write(render_page(page).replace("|", " "))
+    with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        f.writelines(f'<url><loc>{SITE}/{p["path"]}</loc></url>\n' for p in PAGES)
+        f.write('</urlset>\n')
+
 
 if __name__ == "__main__":
     build()
-    if "--fonts" in sys.argv: fonts()
-    print("built")
+    if "--fonts" in sys.argv:
+        fonts()
+    print("Built /, /kr/, /th/ and sitemap.xml")
