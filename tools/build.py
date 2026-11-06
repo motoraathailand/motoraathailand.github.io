@@ -169,7 +169,7 @@ def render_page(page):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title>
-<meta name="description" content="MOTOR AA — {html.escape(region)}. Pick an app to open its introduction page. No ads, no trackers.">
+<meta name="description" content="MOTOR AA — {html.escape(region)}. Pick an app to open its introduction page.">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#fffaf5">
 <link rel="canonical" href="{url}">
