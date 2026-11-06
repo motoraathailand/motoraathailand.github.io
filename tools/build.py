@@ -129,7 +129,7 @@ def card(app, index, default_index):
   <span class="app-name">{name}</span>
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
-    picture = f'''<span class="app-ic"><img src="/{app['icon']}" alt="" width="96" height="96" decoding="async"></span>'''
+    picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
     palm = '<svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg>'
     if app["live"]:
         action = f'<span class="cta"><span data-i18n="open">{S["open"][default_index]}</span>{icon("arrow")}</span>'
@@ -190,7 +190,7 @@ def render_page(page):
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/motion.css">
-<link rel="stylesheet" href="/assets/hub.css?v=10">
+<link rel="stylesheet" href="/assets/hub.css?v=11">
 </head>
 <body data-region="{page['slug']}">
 <div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
