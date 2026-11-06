@@ -23,15 +23,15 @@ PAGES = [
 # Global apps appear on every hub. Country-specific apps are never rendered on
 # another country's page. A live card links only to that app's external intro.
 APPS = [
-    dict(id="aaai", name="AAAi", icon="icons/aaai.svg", url="https://aaai-iji8.onrender.com/about", live=True),
+    dict(id="aaai", name="AAAi", icon="icons/aaai.png", url="https://aaai-iji8.onrender.com/about", live=True),
     dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True),
-    dict(id="aacalc", name="AA Calc", icon="icons/aacalc.svg", url="https://motoraathailand.github.io/aacalc-site/", live=True),
-    dict(id="moffee", name="Moffee", icon="icons/moffee.svg", url="https://motoraathailand.github.io/moffee-site/", live=True),
+    dict(id="aacalc", name="AA Calc", icon="icons/aacalc.png", url="https://motoraathailand.github.io/aacalc-site/", live=True),
+    dict(id="moffee", name="Moffee", icon="icons/moffee.png", url="https://motoraathailand.github.io/moffee-site/", live=True),
     dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True),
     dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True),
-    dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.svg", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th"),
+    dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.png", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th"),
     dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
-    dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.svg", url=None, live=False, dev=True, region="kr"),
+    dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
 ]
 for app in APPS:
     app.setdefault("region", "global")
@@ -190,7 +190,7 @@ def render_page(page):
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/motion.css">
-<link rel="stylesheet" href="/assets/hub.css?v=9">
+<link rel="stylesheet" href="/assets/hub.css?v=10">
 </head>
 <body data-region="{page['slug']}">
 <div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
