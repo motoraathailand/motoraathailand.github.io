@@ -155,8 +155,7 @@ def render_page(page):
     if local_apps:
         local_key = "local_h_" + page["slug"]
         local_cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(local_apps))
-        local_markup = f'''<section aria-labelledby="localH">
-  <h2 id="localH" class="section-title" data-i18n="{local_key}">{S[local_key][index]}</h2>
+        local_markup = f'''<section class="apps-block">
   <ul class="app-grid">{local_cards}</ul>
 </section>
 '''
@@ -215,8 +214,7 @@ def render_page(page):
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
   <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
  </section>
- {local_markup}<section aria-labelledby="appsH">
-  <h2 id="appsH" class="section-title" data-i18n="apps_h">{S['apps_h'][index]}</h2>
+ {local_markup}<section class="apps-block">
   <ul class="app-grid">{cards}</ul>
  </section>
  {upcoming_markup}
