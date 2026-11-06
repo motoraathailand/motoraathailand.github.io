@@ -57,7 +57,7 @@ S = {
     "h1": ["แอปที่คุณชื่นชอบ|อยู่ที่เดียว", "Everyday apps,|one sunny place", "일상의 앱을|한곳에", "日常应用，|一站直达", "आपके रोज़मर्रा के ऐप,|एक ही जगह"],
     "sub": ["เลือกแอปที่ใช่ แล้วเปิดหน้าแนะนำได้เลย", "Find your next everyday essential, wrapped in a little tropical warmth.", "필요한 앱을 고르고 소개 페이지를 만나 보세요.", "选择所需应用，打开它的介绍页面。", "अपना अगला ज़रूरी ऐप चुनें और उसका परिचय पेज खोलें।"],
     "chips_free": ["ใช้ฟรี", "Free to use", "무료 사용", "免费使用", "मुफ़्त"],
-    "chips_noads": ["ไม่มีโฆษณา", "No ads", "광고 없음", "无广告", "कोई विज्ञापन नहीं"],
+    "chips_noads": ["", "", "", "", ""],
     "chips_notrack": ["ไม่มีตัวติดตาม", "No trackers", "추적 없음", "无追踪", "कोई ट्रैकर नहीं"],
     "apps_h": ["แอปของเรา", "Our apps", "앱 둘러보기", "我们的应用", "हमारे ऐप"],
     "local_h": ["สำหรับประเทศไทย", "Made for Thailand", "한국을 위한 앱", "本地应用", "आपके क्षेत्र के लिए"],
@@ -70,7 +70,7 @@ S = {
     "contact_p": ["ข้อเสนอแนะหรือคำถาม ส่งอีเมลหาเราได้เลย", "A question, an idea, or just want to say hello?", "앱에 대한 의견이나 질문을 보내 주세요.", "有任何意见或问题，欢迎发邮件给我们。", "कोई सवाल या सुझाव? हमें ईमेल करें।"],
     "email_btn": ["ส่งอีเมล", "Send email", "메일 보내기", "发送邮件", "ईमेल भेजें"],
     "lang": ["ภาษา", "Language", "언어", "语言", "भाषा"],
-    "footer": ["ไม่มีโฆษณา ไม่มีตัวติดตาม เว็บไซต์แบบสแตติก", "No ads, no trackers. Always a little sunshine.", "광고 없음, 추적 없음. 정적 웹사이트예요.", "无广告、无追踪。纯静态网站。", "कोई विज्ञापन नहीं, कोई फ़ाइल ट्रैकर नहीं।"],
+    "footer": ["เว็บไซต์แบบสแตติก ไม่มีตัวติดตาม", "Static site. No trackers.", "정적 웹사이트예요. 추적 없음.", "纯静态网站，无追踪。", "स्थिर साइट। कोई ट्रैकर नहीं।"],
     "home": ["MOTOR AA หน้าแรก", "MOTOR AA home", "MOTOR AA 홈", "MOTOR AA 首页", "MOTOR AA होम"],
     "cat_aaai": ["ผู้ช่วย AI", "AI assistants", "AI 비서", "AI 助手", "AI सहायक"],
     "cat_autoreport": ["อู่ซ่อมรถ", "Car repair shops", "정비소", "汽修店", "कार रिपेयर शॉप"],
@@ -202,7 +202,7 @@ def render_page(page):
   <span class="eyebrow m-stagger" style="--i:0">{icon("spark")}<span data-i18n="region_{page['slug']}">{html.escape(region)}</span></span>
   <h1 class="m-stagger" style="--i:1" data-i18n="h1">{html.escape(S['h1'][index])}</h1>
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
-  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("sun")}<span data-i18n="chips_noads">{S['chips_noads'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
+  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
  </section>
  <section aria-labelledby="appsH">
   <h2 id="appsH" class="section-title" data-i18n="apps_h">{S['apps_h'][index]}</h2>
