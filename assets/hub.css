@@ -47,3 +47,16 @@ html:lang(ko) :is(h1,.sub,.desc,.contact p){word-break:keep-all}html:lang(th) :i
 @media(min-width:1080px){.hero{padding-top:48px;padding-bottom:45px}.app-grid{gap:24px}.card{min-height:231px}.section-title{margin-left:2px}.soon-section{margin-top:24px}}
 @media(max-width:430px){.bar{grid-template-columns:1fr auto}.region{display:none}.brand{justify-self:start}.brand img{width:125px}.lang-btn #langCur{display:none}.lang-btn{padding:0;width:36px;height:36px;justify-content:center}.hero{padding-top:25px}.chips{gap:13px}.app-grid{gap:14px}.card{min-height:206px}.desc{font-size:12.5px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* Thailand hub store actions. Every selector is scoped so worldwide and Korea pages keep the rules above. */
+body[data-region="th"] .card{min-height:248px}
+body[data-region="th"] .stores{grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}
+body[data-region="th"] .store{position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;width:100%;min-width:0;min-height:48px;padding:7px 10px;border:1px solid #ffffff38;border-radius:13px;background:#161311;color:#fff;box-shadow:0 8px 16px -12px #3a221c;text-align:left;cursor:pointer}
+body[data-region="th"] a.store{text-decoration:none}
+body[data-region="th"] .store-mark{width:22px;height:22px;flex:none;display:block}
+body[data-region="th"] .store-copy{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;line-height:1.15}
+body[data-region="th"] .store-name{font-size:12.5px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+body[data-region="th"] .store-state{font-size:10px;font-weight:600;letter-spacing:0;color:#ffd7cb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-region="th"] .store[data-state="dev"],body[data-region="th"] .store:disabled{background:#3a312e;color:#fff;cursor:not-allowed;box-shadow:none;border-style:dashed;border-color:#ffffff73;opacity:1}
+@media(hover:hover){body[data-region="th"] a.store[data-state="live"]:hover{transform:translate3d(0,-2px,0)}}
+@media(min-width:680px){body[data-region="th"] .card{min-height:258px}body[data-region="th"] .store{min-height:50px;padding:8px 12px}body[data-region="th"] .store-name{font-size:13px}}
+@media(max-width:430px){body[data-region="th"] .stores{gap:6px}body[data-region="th"] .store{gap:6px;min-height:46px;padding:6px 8px}body[data-region="th"] .store-mark{width:18px;height:18px}body[data-region="th"] .store-name{font-size:11px}body[data-region="th"] .store-state{font-size:9.5px}}

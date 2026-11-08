@@ -4,12 +4,12 @@ Three **independent** static app hubs, with no cross-links between regions:
 
 - `/` — Worldwide, English by default; global apps only.
 - `/kr/` — Korea + Worldwide, Korean by default; global and Korea-only apps.
-- `/th/` — Thailand + Worldwide, Thai by default; global and Thailand-only apps.
+- `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only three cards, in order: น้ำมันถูก, BGAA, GREENLIGHT.
 
 Published at <https://motoraathailand.github.io/>. Language choices are scoped to
 each regional page. `?lang=` temporarily overrides the selected language;
-otherwise the last choice for that region wins. The fallback is always the
-region's default language rather than browser detection.
+otherwise the last manual choice for that region wins. With no saved choice,
+the page follows the device language and falls back to English.
 
 ## Build
 
@@ -20,10 +20,17 @@ python3 tools/build.py --fonts
 ```
 
 `tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
-renders the three `index.html` files and `sitemap.xml`. App cards have a region
-of `global`, `kr`, or `th`. `live=True` adds that app's introduction URL;
-otherwise it is a non-linked, in-development card. `주유소를부탁해` is Korea-only
-and awaits its introduction URL.
+renders the three `index.html` files and `sitemap.xml`. On `/` and `/kr/`, app
+cards have a region of `global` or `kr`. `live=True` adds that app's introduction
+URL; otherwise it is a non-linked, in-development card. `주유소를부탁해` is
+Korea-only and awaits its introduction URL. `/th/` does not use that grid. The
+generator writes only น้ำมันถูก, BGAA and GREENLIGHT, in that order, each with a
+Google Play button and an App Store button. Nammanthuk and BGAA link Google Play
+to the tester-participation pages their introduction sites already use
+(`nammanthuk-site/join.html` and `bgaa-site/join.html`), not to a Play download.
+Their App Store buttons, and both GREENLIGHT buttons, are localized
+in-development controls. Thailand-only stylesheet rules are appended under
+`body[data-region="th"]` and the Thailand page loads them with its own CSS query.
 
 `assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is
 transparent winged-AA-only line art cropped from the supplied reference; the
@@ -42,6 +49,8 @@ A pre-rebuild archive is stored outside the repository in
 python3 tools/verify.py
 ```
 
-The verification fails on missing or incorrect apps per region, internal hub
-cross-links, wrong default languages, non-winged-AA header images, broken local
-asset paths, or sitemap omissions.
+The verification fails on missing or incorrect apps per region, a Thailand page
+that is not the three cards in order with six store buttons in the right state,
+a rebuild that changes `/` or `/kr/` bytes, internal hub cross-links, wrong
+default languages, non-winged-AA header images, broken local asset paths, or
+sitemap omissions.
