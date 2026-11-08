@@ -114,7 +114,7 @@ class Hubs(unittest.TestCase):
         self.assertIn('window.HUB_REGION="th"', text)
         self.assertIn('window.HUB_DEFAULT="th"', text)
         self.assertIn('window.HUB_LANGS=["th", "en", "ko", "zh", "hi"]', text)
-        self.assertIn('/assets/hub.css?v=13', text)
+        self.assertIn('/assets/hub.css?v=14', text)
         dev = 'กำลังพัฒนา'
         expect = {
             'nammanthuk': (('google-play', 'live', TH_PLAY['nammanthuk']), ('app-store', 'dev', None)),
