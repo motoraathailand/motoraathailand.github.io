@@ -208,7 +208,7 @@ def render_page(page):
     # The Thailand branch below must not change this worldwide/Korea markup.
     css_v = "11"
     if page["slug"] == "th":
-        css_v = "12"
+        css_v = "13"
         by_id = {a["id"]: a for a in APPS}
         ordered_live = [by_id[i] for i in TH_STORE_ORDER]
         missing = [a["id"] for a in ordered_live if a["id"] != "scanner" and not a.get("play_tester")]
