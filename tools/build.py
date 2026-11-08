@@ -20,21 +20,31 @@ PAGES = [
     {"slug": "th", "path": "th/", "default": "th", "regions": ("global", "th"), "label": "Thailand + Worldwide"},
 ]
 
-# Global apps appear on every hub. Country-specific apps are never rendered on
-# another country's page. A live card links only to that app's external intro.
+# Global apps appear on the worldwide and Korea hubs. Country-specific apps are
+# never rendered on another country's page. A live card on those hubs links only
+# to that app's external intro. Thailand is separate: three fixed cards, in
+# order, with store buttons. play_tester is the tester-participation page the
+# app's own introduction site already links as its Google Play control
+# (nammanthuk-site/join.html and bgaa-site/join.html). It is not a Play listing.
 APPS = [
     dict(id="aaai", name="AAAi", icon="icons/aaai.png", url="https://aaai-iji8.onrender.com/about", live=True),
     dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True),
     dict(id="aacalc", name="AA Calc", icon="icons/aacalc.png", url="https://motoraathailand.github.io/aacalc-site/", live=True),
     dict(id="moffee", name="Moffee", icon="icons/moffee.png", url="https://motoraathailand.github.io/moffee-site/", live=True),
-    dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True),
+    dict(id="bgaa", name="BGAA", icon="icons/bgaa.png", url="https://motoraathailand.github.io/bgaa-site/", live=True,
+         play_tester="https://motoraathailand.github.io/bgaa-site/join.html"),
+    # GREENLIGHT stays in development on both stores. There is no tester URL.
     dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True),
-    dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.png", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th"),
+    dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.png", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th",
+         play_tester="https://motoraathailand.github.io/nammanthuk-site/join.html"),
     dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
     dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
 ]
 for app in APPS:
     app.setdefault("region", "global")
+
+# Thailand market page only. Worldwide and Korea keep the registry order above.
+TH_STORE_ORDER = ("nammanthuk", "bgaa", "scanner")
 
 PALETTES = {
     "aaai": ("#eaa3aa", "#f4c6c1", "#66353e"),
@@ -142,6 +152,49 @@ def card(app, index, default_index):
 </li>'''
 
 
+PLAY_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M3.2 2.4c-.4.4-.6 1-.6 1.7v15.8c0 .7.2 1.3.6 1.7l.1.1 8.9-8.9v-.2L3.3 2.3l-.1.1z"/><path fill="#FBBC04" d="M16.4 15.5 12.6 11.7v-.2l3.8-3.8.1.1 4.5 2.6c1.2.7 1.2 1.9 0 2.6l-4.5 2.5-.1.1z"/><path fill="#34A853" d="M16.5 15.4 12.6 11.5 3.2 20.9c.5.5 1.2.6 2 .1l11.2-6.4.1-.2z"/><path fill="#EA4335" d="M16.5 8.8 5.2 2.3c-.8-.5-1.5-.4-2 .1l9.4 9.3 3.9-2.9z"/></svg>'
+APPLE_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.37 12.64c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.61 2.25 2.76 2.21 1.11-.04 1.53-.71 2.87-.71 1.34 0 1.72.71 2.89.69 1.19-.02 1.95-1.08 2.68-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.34-3.54zM14.7 6.55c.61-.74 1.02-1.77.91-2.8-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.21z"/></svg>'
+
+
+def store_button(kind, default_index, href):
+    """One identifiable store control. href None is in-development, not a link."""
+    mark = PLAY_MARK if kind == "google-play" else APPLE_MARK
+    label = "Google Play" if kind == "google-play" else "App Store"
+    if href:
+        return (
+            f'<a class="store" data-store="{kind}" data-state="live" href="{html.escape(href, quote=True)}" rel="noopener" data-press data-ripple>'
+            f'{mark}<span class="store-copy"><span class="store-name">{label}</span></span></a>'
+        )
+    state = html.escape(S["dev_badge"][default_index])
+    return (
+        f'<button type="button" class="store" data-store="{kind}" data-state="dev" disabled aria-disabled="true">'
+        f'{mark}<span class="store-copy"><span class="store-name">{label}</span>'
+        f'<span class="store-state" data-i18n="dev_badge">{state}</span></span></button>'
+    )
+
+
+def store_card(app, index, default_index):
+    """Thailand card: same coral shell, with Google Play and App Store controls."""
+    start, end, ink = PALETTES[app["id"]]
+    style = f"--card-start:{start};--card-end:{end};--card-ink:{ink};--i:{index}"
+    name = html.escape(app["name"])
+    category = S["cat_" + app["id"]][default_index]
+    description = S["d_" + app["id"]][default_index]
+    copy = f'''<span class="app-copy">
+  <span class="cat" data-i18n="cat_{app['id']}">{html.escape(category)}</span>
+  <span class="app-name">{name}</span>
+  <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
+</span>'''
+    picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
+    palm = '<svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg>'
+    # GREENLIGHT is confirmed in development on both stores, even if a URL appears later.
+    play_href = None if app["id"] == "scanner" else app.get("play_tester")
+    buttons = store_button("google-play", default_index, play_href) + store_button("app-store", default_index, None)
+    return f'''<li class="m-stagger" style="{style}">
+<div class="card" data-app="{app['id']}">{palm}{copy}{picture}<span class="stores">{buttons}</span></div>
+</li>'''
+
+
 def render_page(page):
     apps = [a for a in APPS if a["region"] in page["regions"]]
     local_apps = [a for a in apps if a["region"] != "global"]
@@ -152,13 +205,26 @@ def render_page(page):
     title = S["doc_title"][index]
     region = S["region_" + page["slug"]][index]
     # Local apps first, then worldwide — one grid so card gaps stay even.
-    ordered_live = local_apps + global_live
-    cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(ordered_live))
-    local_markup = ""
-    upcoming_markup = ""
-    if global_upcoming:
-        soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(global_upcoming))
-        upcoming_markup = f'''<section class="soon-section" aria-labelledby="soonH">
+    # The Thailand branch below must not change this worldwide/Korea markup.
+    css_v = "11"
+    if page["slug"] == "th":
+        css_v = "12"
+        by_id = {a["id"]: a for a in APPS}
+        ordered_live = [by_id[i] for i in TH_STORE_ORDER]
+        missing = [a["id"] for a in ordered_live if a["id"] != "scanner" and not a.get("play_tester")]
+        if missing or any(a.get("play_tester") for a in ordered_live if a["id"] == "scanner"):
+            raise SystemExit("Thailand Google Play buttons need the existing tester pages for Nammanthuk and BGAA only")
+        cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
+        local_markup = ""
+        upcoming_markup = ""
+    else:
+        ordered_live = local_apps + global_live
+        cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(ordered_live))
+        local_markup = ""
+        upcoming_markup = ""
+        if global_upcoming:
+            soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(global_upcoming))
+            upcoming_markup = f'''<section class="soon-section" aria-labelledby="soonH">
 <h2 id="soonH" class="section-title" data-i18n="soon_h">{S["soon_h"][index]}</h2>
 <p class="section-sub" data-i18n="soon_sub">{S["soon_sub"][index]}</p>
 <ul class="app-grid">{soon_cards}</ul>
@@ -190,7 +256,7 @@ def render_page(page):
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/motion.css">
-<link rel="stylesheet" href="/assets/hub.css?v=11">
+<link rel="stylesheet" href="/assets/hub.css?v={css_v}">
 </head>
 <body data-region="{page['slug']}">
 <div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
