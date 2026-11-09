@@ -27,10 +27,10 @@ Korea-only and awaits its introduction URL. `/th/` does not use that grid and
 does not show `주유소를부탁해`. The generator writes น้ำมันถูก, AA Franchise, BGAA,
 AAAi, AutoReport, AA Calc, Moffee, GREENLIGHT, then EZZ. EZZ is registered as a
 global app but filtered off `/` and `/kr/`. Each card has a Google Play
-button and an App Store button, and no leaf decoration. Nammanthuk and BGAA link
-Google Play to the tester-participation pages their introduction sites already
-use (`nammanthuk-site/join.html` and `bgaa-site/join.html`). Every other store
-button is a localized in-development control. Thailand-only stylesheet rules are appended under
+button and an App Store button, and no leaf decoration. Both Nammanthuk buttons
+open `https://motoraathailand.github.io/nammanthuk-site/`, the intro page that
+follows the device language. Every other store button is a localized
+in-development control. Thailand-only stylesheet rules are appended under
 `body[data-region="th"]` and the Thailand page loads them with its own CSS query.
 
 `assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is
