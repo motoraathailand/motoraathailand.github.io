@@ -48,7 +48,9 @@ for app in APPS:
 # Thailand market page only. Worldwide and Korea keep the registry order above.
 # Korea-only fuelkr is omitted. Nammanthuk and BGAA are the only Play tester links.
 TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa", "aaai", "autoreport", "aacalc", "moffee", "scanner", "ezz")
-TH_PLAY_APPS = ("nammanthuk", "bgaa")
+# Both Nammanthuk store buttons open this intro page. It follows ?lang=, then the
+# saved choice, then the device language, and falls back to English. Not join.html.
+NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
 
 PALETTES = {
     "aaai": ("#eaa3aa", "#f4c6c1", "#66353e"),
@@ -203,9 +205,9 @@ def store_card(app, index, default_index):
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    # Only Nammanthuk and BGAA have a real tester page. Every other Play button stays in development.
-    play_href = app.get("play_tester") if app["id"] in TH_PLAY_APPS else None
-    buttons = store_button("google-play", default_index, play_href) + store_button("app-store", default_index, None)
+    # Only Nammanthuk links both stores to its intro page. Every other card stays in development.
+    href = NAMMANTHUK_INTRO if app["id"] == "nammanthuk" else None
+    buttons = store_button("google-play", default_index, href) + store_button("app-store", default_index, href)
     return f'''<li class="m-stagger" style="{style}">
 <div class="card" data-app="{app['id']}">{copy}{picture}<span class="stores">{buttons}</span></div>
 </li>'''
@@ -227,9 +229,9 @@ def render_page(page):
         css_v = "14"
         by_id = {a["id"]: a for a in APPS}
         ordered_live = [by_id[i] for i in TH_STORE_ORDER]
-        missing = [app_id for app_id in TH_PLAY_APPS if not by_id[app_id].get("play_tester")]
-        if missing or "fuelkr" in TH_STORE_ORDER:
-            raise SystemExit("Thailand Google Play buttons need the existing tester pages for Nammanthuk and BGAA only")
+        intro = by_id["nammanthuk"].get("url")
+        if intro != NAMMANTHUK_INTRO or "join.html" in NAMMANTHUK_INTRO or "fuelkr" in TH_STORE_ORDER:
+            raise SystemExit("Nammanthuk store buttons must use the intro page, not a tester join URL")
         cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
         local_markup = ""
         upcoming_markup = ""
