@@ -39,12 +39,16 @@ APPS = [
          play_tester="https://motoraathailand.github.io/nammanthuk-site/join.html"),
     dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
     dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
+    # Global mini-game app, listed on the Thailand hub only for now so / and /kr/ stay unchanged.
+    dict(id="ezz", name="EZZ", icon="icons/ezz.png", url=None, live=False, dev=True, region="global", th_only=True),
 ]
 for app in APPS:
     app.setdefault("region", "global")
 
 # Thailand market page only. Worldwide and Korea keep the registry order above.
-TH_STORE_ORDER = ("nammanthuk", "bgaa", "scanner")
+# Korea-only fuelkr is omitted. Nammanthuk and BGAA are the only Play tester links.
+TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa", "aaai", "autoreport", "aacalc", "moffee", "scanner", "ezz")
+TH_PLAY_APPS = ("nammanthuk", "bgaa")
 
 PALETTES = {
     "aaai": ("#eaa3aa", "#f4c6c1", "#66353e"),
@@ -56,6 +60,13 @@ PALETTES = {
     "nammanthuk": ("#de7869", "#ef9c82", "#fffaf6"),
     "aafranchise": ("#df7768", "#efa285", "#fffaf6"),
     "fuelkr": ("#edab98", "#f8cfb8", "#663c30"),
+    "ezz": ("#ee9fb6", "#f8c9d6", "#6b2a40"),
+}
+
+# Thailand-only copy. Kept out of S so the worldwide and Korea string blobs stay identical.
+TH_S = {
+    "cat_ezz": ["เกมออฟไลน์", "Offline games", "오프라인 게임", "离线游戏", "ऑफ़लाइन गेम"],
+    "d_ezz": ["รวมมินิเกมที่เล่นได้แม้ไม่มีอินเทอร์เน็ต เช่น 2048 ซูโดกุ และบล็อกพัซเซิล", "A collection of mini games you can play without internet, like 2048, sudoku and block puzzle.", "2048, 스도쿠, 블록 퍼즐 등 인터넷 없이도 즐기는 미니게임 모음.", "无需联网即可畸玩的小游戏合集，包括 2048、数独和方块拼图。", "2048, सुडोकू और ब्लॉक पज़ल जैसे बिना इंटरनेट खेले जाने वाले मिनी गेम्स।"],
 }
 
 # Text order is th, en, ko, zh, hi. Pipes are optional phrase-break hints.
@@ -110,6 +121,12 @@ def i18n_js():
         for i, (code, _) in enumerate(LANGS):
             result.setdefault(code, {})[key] = strings[i]
     return result
+
+
+def hub_text(key, index):
+    if key in S:
+        return S[key][index]
+    return TH_S[key][index]
 
 
 ICONS = {
@@ -178,25 +195,24 @@ def store_card(app, index, default_index):
     start, end, ink = PALETTES[app["id"]]
     style = f"--card-start:{start};--card-end:{end};--card-ink:{ink};--i:{index}"
     name = html.escape(app["name"])
-    category = S["cat_" + app["id"]][default_index]
-    description = S["d_" + app["id"]][default_index]
+    category = hub_text("cat_" + app["id"], default_index)
+    description = hub_text("d_" + app["id"], default_index)
     copy = f'''<span class="app-copy">
   <span class="cat" data-i18n="cat_{app['id']}">{html.escape(category)}</span>
   <span class="app-name">{name}</span>
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    palm = '<svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg>'
-    # GREENLIGHT is confirmed in development on both stores, even if a URL appears later.
-    play_href = None if app["id"] == "scanner" else app.get("play_tester")
+    # Only Nammanthuk and BGAA have a real tester page. Every other Play button stays in development.
+    play_href = app.get("play_tester") if app["id"] in TH_PLAY_APPS else None
     buttons = store_button("google-play", default_index, play_href) + store_button("app-store", default_index, None)
     return f'''<li class="m-stagger" style="{style}">
-<div class="card" data-app="{app['id']}">{palm}{copy}{picture}<span class="stores">{buttons}</span></div>
+<div class="card" data-app="{app['id']}">{copy}{picture}<span class="stores">{buttons}</span></div>
 </li>'''
 
 
 def render_page(page):
-    apps = [a for a in APPS if a["region"] in page["regions"]]
+    apps = [a for a in APPS if a["region"] in page["regions"] and not (a.get("th_only") and page["slug"] != "th")]
     local_apps = [a for a in apps if a["region"] != "global"]
     global_live = [a for a in apps if a["region"] == "global" and a["live"]]
     global_upcoming = [a for a in apps if a["region"] == "global" and not a["live"]]
@@ -211,8 +227,8 @@ def render_page(page):
         css_v = "14"
         by_id = {a["id"]: a for a in APPS}
         ordered_live = [by_id[i] for i in TH_STORE_ORDER]
-        missing = [a["id"] for a in ordered_live if a["id"] != "scanner" and not a.get("play_tester")]
-        if missing or any(a.get("play_tester") for a in ordered_live if a["id"] == "scanner"):
+        missing = [app_id for app_id in TH_PLAY_APPS if not by_id[app_id].get("play_tester")]
+        if missing or "fuelkr" in TH_STORE_ORDER:
             raise SystemExit("Thailand Google Play buttons need the existing tester pages for Nammanthuk and BGAA only")
         cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
         local_markup = ""
@@ -234,6 +250,11 @@ def render_page(page):
         for code, name in LANGS
     )
     logo = '<picture><source media="(prefers-color-scheme: dark)" srcset="/icons/logo-mark-dark.png"><img src="/icons/logo-mark.png" alt="AA" width="180" height="45"></picture>'
+    hub_strings = i18n_js()
+    if page["slug"] == "th":
+        for i, (code, _) in enumerate(LANGS):
+            for key, values in TH_S.items():
+                hub_strings[code][key] = values[i]
     return f'''<!doctype html>
 <html lang="{page['default']}">
 <head>
@@ -288,7 +309,7 @@ def render_page(page):
 <footer class="foot"><span>© 2026 MOTOR AA</span><span data-i18n="footer">{S['footer'][index]}</span></footer>
 <script>window.HUB_REGION={json.dumps(page['slug'])};window.HUB_DEFAULT={json.dumps(page['default'])};</script>
 <script src="/motion.js"></script>
-<script>window.HUB_STRINGS={json.dumps(i18n_js(), ensure_ascii=False, separators=(',', ':'))};window.HUB_LANGS={json.dumps([c for c, _ in LANGS])};</script>
+<script>window.HUB_STRINGS={json.dumps(hub_strings, ensure_ascii=False, separators=(',', ':'))};window.HUB_LANGS={json.dumps([c for c, _ in LANGS])};</script>
 <script src="/assets/hub.js?v=9"></script>
 </body>
 </html>

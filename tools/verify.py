@@ -13,12 +13,12 @@ EXPECTED = {
     'world': {
         'global': {'aaai', 'autoreport', 'aacalc', 'moffee', 'bgaa'},
         'upcoming': {'scanner'},
-        'default': 'en', 'absent': {'nammanthuk', 'aafranchise', 'fuelkr'},
+        'default': 'en', 'absent': {'nammanthuk', 'aafranchise', 'fuelkr', 'ezz'},
     },
     'kr': {
         'global': {'aaai', 'autoreport', 'aacalc', 'moffee', 'bgaa'},
         'upcoming': {'scanner', 'fuelkr'},
-        'default': 'ko', 'absent': {'nammanthuk', 'aafranchise'},
+        'default': 'ko', 'absent': {'nammanthuk', 'aafranchise', 'ezz'},
     },
 }
 # Bytes of files this change must not touch. Thailand HTML and the appended
@@ -36,8 +36,8 @@ TH_PLAY = {
     'nammanthuk': 'https://motoraathailand.github.io/nammanthuk-site/join.html',
     'bgaa': 'https://motoraathailand.github.io/bgaa-site/join.html',
 }
-TH_ORDER = ('nammanthuk', 'bgaa', 'scanner')
-TH_NAMES = ('น้ำมันถูก', 'BGAA', 'GREENLIGHT')
+TH_ORDER = ('nammanthuk', 'aafranchise', 'bgaa', 'aaai', 'autoreport', 'aacalc', 'moffee', 'scanner', 'ezz')
+TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'BGAA', 'AAAi', 'AutoReport', 'AA Calc', 'Moffee', 'GREENLIGHT', 'EZZ')
 
 class Page(HTMLParser):
     def __init__(self):
@@ -96,31 +96,30 @@ class Hubs(unittest.TestCase):
                     if parsed.scheme == 'https':
                         self.assertNotIn(parsed.path, ('/', '/kr/', '/th/'), f'Hub cross-link: {href}')
 
-    def test_thailand_three_cards_and_six_buttons(self):
+    def test_thailand_cards_and_store_buttons(self):
         text = (ROOT / 'th' / 'index.html').read_text(encoding='utf-8')
         page = Page(); page.feed(text)
         self.assertEqual(page.lang, 'th')
         self.assertEqual(page.body_region, 'th')
         self.assertEqual([c['id'] for c in page.cards], list(TH_ORDER))
         self.assertEqual(tuple(page.names), TH_NAMES)
-        self.assertEqual(len(page.stores), 6)
+        self.assertEqual(len(page.stores), 18)
         self.assertNotIn('soon-section', text)
         self.assertNotIn('class="cta"', text)
+        self.assertNotIn('class="palm"', text)
         self.assertNotIn('<video', text)
         self.assertNotIn('play.google.com', text)
         self.assertNotIn('apps.apple.com', text)
-        for gone in ('aaai', 'autoreport', 'aacalc', 'moffee', 'aafranchise', 'fuelkr'):
-            self.assertNotIn(f'data-app="{gone}"', text)
+        self.assertNotIn('data-app="fuelkr"', text)
         self.assertIn('window.HUB_REGION="th"', text)
         self.assertIn('window.HUB_DEFAULT="th"', text)
         self.assertIn('window.HUB_LANGS=["th", "en", "ko", "zh", "hi"]', text)
         self.assertIn('/assets/hub.css?v=14', text)
         dev = 'กำลังพัฒนา'
-        expect = {
-            'nammanthuk': (('google-play', 'live', TH_PLAY['nammanthuk']), ('app-store', 'dev', None)),
-            'bgaa': (('google-play', 'live', TH_PLAY['bgaa']), ('app-store', 'dev', None)),
-            'scanner': (('google-play', 'dev', None), ('app-store', 'dev', None)),
-        }
+        both_dev = (('google-play', 'dev', None), ('app-store', 'dev', None))
+        expect = {app_id: both_dev for app_id in TH_ORDER}
+        expect['nammanthuk'] = (('google-play', 'live', TH_PLAY['nammanthuk']), ('app-store', 'dev', None))
+        expect['bgaa'] = (('google-play', 'live', TH_PLAY['bgaa']), ('app-store', 'dev', None))
         for card in page.cards:
             self.assertFalse(card['linked'])
             self.assertEqual(len(card['stores']), 2)
