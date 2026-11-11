@@ -3,7 +3,7 @@
 Only the **Thailand** hub is operated:
 
 - `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only น้ำมันถูก, AA Franchise, and BGAA, each with store buttons. The hero keeps its star mark without a region label.
-- `/` and `/kr/` — retired (Nov 11, 2026). Each is a small redirect page to `/th/` (JS `location.replace` keeping `?lang=` and the hash, plus a meta refresh and a canonical to `/th/`), so old links keep working.
+- `/` and `/kr/` — deleted (Nov 11, 2026). No page and no redirect is built there; GitHub Pages serves `404.html` (a plain not-found page with a link to `/th/`). Intro sites link to `/th/` directly.
 
 Published at <https://motoraathailand.github.io/>. Language choices are scoped to
 each regional page. `?lang=` temporarily overrides the selected language;
@@ -19,7 +19,7 @@ python3 tools/build.py --fonts
 ```
 
 `tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
-renders `th/index.html`, the two redirect pages and `sitemap.xml` (which lists
+renders `th/index.html` and `sitemap.xml` (which lists
 only `/th/`). `/th/` does not show `주유소를부탁해`. The generator writes only น้ำมันถูก, AA Franchise,
 then BGAA. Other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. Each card has a
 Google Play button and an App Store button, and no leaf decoration. Both
@@ -47,7 +47,7 @@ A pre-rebuild archive is stored outside the repository in
 python3 tools/verify.py
 ```
 
-The verification fails when `/` or `/kr/` is not a redirect to `/th/`, a Thailand
+The verification fails when `/` or `/kr/` pages exist, `404.html` redirects, a Thailand
 page that is not the three cards in order with six store buttons in the right
 state, region label text or hub cross-links on `/th/`, a rebuild that differs
 from the committed output, non-winged-AA header images, broken local asset

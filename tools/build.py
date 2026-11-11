@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Build the MOTOR AA app hub. Only the Thailand hub (/th/) is operated.
 
-The former Worldwide (/) and Korea (/kr/) hubs are retired: both paths are
-written as lightweight redirects to /th/ (query string and hash preserved) so
-old links such as the intro pages' "all apps" buttons keep working.
+The former Worldwide (/) and Korea (/kr/) hubs are deleted. Nothing is built
+at / or /kr/; GitHub Pages answers them with 404.html.
 
 Run ``python3 tools/build.py``. Add ``--fonts`` to refresh the self-hosted
 Korean, Chinese and Devanagari subsets after changing translated copy.
@@ -21,8 +20,6 @@ LANGS = [("th", "ไทย"), ("en", "English"), ("ko", "한국어"), ("zh", "�
 PAGES = [
     {"slug": "th", "path": "th/", "default": "th"},
 ]
-# Retired hubs. Each path only redirects to the Thailand hub.
-REDIRECTS = ("", "kr/")
 TH_URL = SITE + "/th/"
 
 # App registry. The Thailand hub shows three fixed cards, in order, with store
@@ -291,37 +288,12 @@ def fonts():
         subprocess.check_call(["pyftsubset", src, f"--unicodes={unicodes}", "--flavor=woff2", f"--output-file={ROOT}/fonts/noto-deva.woff2", "--layout-features=*"])
 
 
-def render_redirect():
-    """Retired hub path: forward to /th/, keeping ?lang= and any other query/hash."""
-    return f'''<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MOTOR AA</title>
-<meta name="robots" content="noindex,follow">
-<link rel="canonical" href="{TH_URL}">
-<script>location.replace("/th/" + location.search + location.hash);</script>
-<meta http-equiv="refresh" content="0;url=/th/">
-</head>
-<body>
-<p><a href="/th/">MOTOR AA</a></p>
-</body>
-</html>
-'''
-
-
 def build():
     for page in PAGES:
         directory = os.path.join(ROOT, page["path"])
         os.makedirs(directory, exist_ok=True)
         with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
             f.write(render_page(page).replace("|", " "))
-    for path in REDIRECTS:
-        directory = os.path.join(ROOT, path)
-        os.makedirs(directory, exist_ok=True)
-        with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
-            f.write(render_redirect())
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         f.writelines(f'<url><loc>{SITE}/{p["path"]}</loc></url>\n' for p in PAGES)
@@ -332,4 +304,4 @@ if __name__ == "__main__":
     build()
     if "--fonts" in sys.argv:
         fonts()
-    print("Built /th/, redirects at / and /kr/, and sitemap.xml")
+    print("Built /th/ and sitemap.xml")
