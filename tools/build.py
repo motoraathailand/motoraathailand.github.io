@@ -23,9 +23,8 @@ PAGES = [
 # Global apps appear on the worldwide and Korea hubs. Country-specific apps are
 # never rendered on another country's page. A live card on those hubs links only
 # to that app's external intro. Thailand is separate: three fixed cards, in
-# order, with store buttons. play_tester is the tester-participation page the
-# app's own introduction site already links as its Google Play control
-# (nammanthuk-site/join.html and bgaa-site/join.html). It is not a Play listing.
+# order, with store buttons. play_tester is kept on the registry for the apps'
+# own introduction sites and is not used as a hub store link.
 APPS = [
     dict(id="aaai", name="AAAi", icon="icons/aaai.png", url="https://aaai-iji8.onrender.com/about", live=True),
     dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True),
@@ -46,11 +45,17 @@ for app in APPS:
     app.setdefault("region", "global")
 
 # Thailand market page only. Worldwide and Korea keep the registry order above.
-# Korea-only fuelkr is omitted. Nammanthuk and BGAA are the only Play tester links.
+# Korea-only fuelkr is omitted.
 TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa", "aaai", "autoreport", "aacalc", "moffee", "scanner", "ezz")
-# Both Nammanthuk store buttons open this intro page. It follows ?lang=, then the
-# saved choice, then the device language, and falls back to English. Not join.html.
+# These cards link both store buttons to the app intro page. The pages follow
+# ?lang=, then the saved choice, then the device language, and fall back to
+# English. Not join.html.
 NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
+AAFRANCHISE_INTRO = "https://motoraathailand.github.io/aafranchise-site/"
+TH_INTRO = {
+    "nammanthuk": NAMMANTHUK_INTRO,
+    "aafranchise": AAFRANCHISE_INTRO,
+}
 
 PALETTES = {
     "aaai": ("#eaa3aa", "#f4c6c1", "#66353e"),
@@ -205,8 +210,9 @@ def store_card(app, index, default_index):
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    # Only Nammanthuk links both stores to its intro page. Every other card stays in development.
-    href = NAMMANTHUK_INTRO if app["id"] == "nammanthuk" else None
+    # Nammanthuk and AA Franchise link both stores to their intro pages.
+    # Every other card stays in development.
+    href = TH_INTRO.get(app["id"])
     buttons = store_button("google-play", default_index, href) + store_button("app-store", default_index, href)
     return f'''<li class="m-stagger" style="{style}">
 <div class="card" data-app="{app['id']}">{copy}{picture}<span class="stores">{buttons}</span></div>
@@ -229,9 +235,11 @@ def render_page(page):
         css_v = "14"
         by_id = {a["id"]: a for a in APPS}
         ordered_live = [by_id[i] for i in TH_STORE_ORDER]
-        intro = by_id["nammanthuk"].get("url")
-        if intro != NAMMANTHUK_INTRO or "join.html" in NAMMANTHUK_INTRO or "fuelkr" in TH_STORE_ORDER:
-            raise SystemExit("Nammanthuk store buttons must use the intro page, not a tester join URL")
+        for app_id, intro in TH_INTRO.items():
+            if by_id[app_id].get("url") != intro or "join.html" in intro:
+                raise SystemExit(f"{app_id} store buttons must use the intro page, not a tester join URL")
+        if "fuelkr" in TH_STORE_ORDER:
+            raise SystemExit("Korea-only fuelkr must not appear on the Thailand hub")
         cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
         local_markup = ""
         upcoming_markup = ""
