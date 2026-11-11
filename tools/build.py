@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build the independent Worldwide, Korea and Thailand MOTOR AA app hubs.
+"""Build the MOTOR AA app hub. Only the Thailand hub (/th/) is operated.
+
+The former Worldwide (/) and Korea (/kr/) hubs are retired: both paths are
+written as lightweight redirects to /th/ (query string and hash preserved) so
+old links such as the intro pages' "all apps" buttons keep working.
 
 Run ``python3 tools/build.py``. Add ``--fonts`` to refresh the self-hosted
 Korean, Chinese and Devanagari subsets after changing translated copy.
@@ -15,16 +19,15 @@ SITE = "https://motoraathailand.github.io"
 EMAIL = "motoraathailand@gmail.com"
 LANGS = [("th", "ไทย"), ("en", "English"), ("ko", "한국어"), ("zh", "中文"), ("hi", "हिन्दी")]
 PAGES = [
-    {"slug": "world", "path": "", "default": "en", "regions": ("global",), "label": "Worldwide"},
-    {"slug": "kr", "path": "kr/", "default": "ko", "regions": ("global", "kr"), "label": "Korea + Worldwide"},
-    {"slug": "th", "path": "th/", "default": "th", "regions": ("global", "th"), "label": "Thailand + Worldwide"},
+    {"slug": "th", "path": "th/", "default": "th"},
 ]
+# Retired hubs. Each path only redirects to the Thailand hub.
+REDIRECTS = ("", "kr/")
+TH_URL = SITE + "/th/"
 
-# Global apps appear on the worldwide and Korea hubs. Country-specific apps are
-# never rendered on another country's page. A live card on those hubs links only
-# to that app's external intro. Thailand is separate: three fixed cards, in
-# order, with store buttons. play_tester is kept on the registry for the apps'
-# own introduction sites and is not used as a hub store link.
+# App registry. The Thailand hub shows three fixed cards, in order, with store
+# buttons. play_tester is kept on the registry for the apps' own introduction
+# sites and is not used as a hub store link.
 APPS = [
     dict(id="aaai", name="AAAi", icon="icons/aaai.png", url="https://aaai-iji8.onrender.com/about", live=True),
     dict(id="autoreport", name="AutoReport", icon="icons/autoreport.png", url="https://motoraathailand.github.io/autoreport-site/", live=True),
@@ -38,14 +41,13 @@ APPS = [
          play_tester="https://motoraathailand.github.io/nammanthuk-site/join.html"),
     dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
     dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
-    # Global mini-game app, kept in the registry but not shown on /th/ for now, so / and /kr/ stay unchanged.
-    dict(id="ezz", name="EZZ", icon="icons/ezz.png", url=None, live=False, dev=True, region="global", th_only=True),
+    # Global mini-game app, kept in the registry but not shown on /th/ for now.
+    dict(id="ezz", name="EZZ", icon="icons/ezz.png", url=None, live=False, dev=True, region="global"),
 ]
 for app in APPS:
     app.setdefault("region", "global")
 
-# Thailand market page only. Worldwide and Korea keep the registry order above.
-# Show only nammanthuk, AA Franchise, and BGAA, in that order. Other apps stay
+# Thailand hub. Show only nammanthuk, AA Franchise, and BGAA, in that order. Other apps stay
 # in the registry but are hidden from /th/. Korea-only fuelkr stays omitted.
 TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa")
 # These cards link both store buttons to the app intro page. The pages follow
@@ -71,7 +73,7 @@ PALETTES = {
     "ezz": ("#ee9fb6", "#f8c9d6", "#6b2a40"),
 }
 
-# Thailand-only copy. Kept out of S so the worldwide and Korea string blobs stay identical.
+# Extra copy for registry apps that have no entry in S.
 TH_S = {
     "cat_ezz": ["เกมออฟไลน์", "Offline games", "오프라인 게임", "离线游戏", "ऑफ़लाइन गेम"],
     "d_ezz": ["รวมมินิเกมที่เล่นได้แม้ไม่มีอินเทอร์เน็ต เช่น 2048 ซูโดกุ และบล็อกพัซเซิล", "A collection of mini games you can play without internet, like 2048, sudoku and block puzzle.", "2048, 스도쿠, 블록 퍼즐 등 인터넷 없이도 즐기는 미니게임 모음.", "无需联网即可畸玩的小游戏合集，包括 2048、数独和方块拼图。", "2048, सुडोकू और ब्लॉक पज़ल जैसे बिना इंटरनेट खेले जाने वाले मिनी गेम्स।"],
@@ -80,21 +82,10 @@ TH_S = {
 # Text order is th, en, ko, zh, hi. Pipes are optional phrase-break hints.
 S = {
     "doc_title": ["MOTOR AA — แอปทั้งหมดของเรา", "MOTOR AA — All our apps", "MOTOR AA — 모든 앱", "MOTOR AA — 我们的全部应用", "MOTOR AA — हमारे सभी ऐप"],
-    "region_world": ["แอปสำหรับทั่วโลก", "Worldwide apps", "전 세계 앱", "全球应用", "दुनिया भर के ऐप"],
-    "region_kr": ["เกาหลี + ทั่วโลก", "Korea + Worldwide", "한국 + 전 세계", "韩国 + 全球", "कोरिया + दुनिया भर"],
-    "region_th": ["ไทย + ทั่วโลก", "Thailand + Worldwide", "태국 + 전 세계", "泰国 + 全球", "थाईलैंड + दुनिया भर"],
     "h1": ["แอปที่คุณชื่นชอบ|อยู่ที่เดียว", "Everyday apps,|one sunny place", "일상의 앱을|한곳에", "日常应用，|一站直达", "आपके रोज़मर्रा के ऐप,|एक ही जगह"],
     "sub": ["เลือกแอปที่ใช่ แล้วเปิดหน้าแนะนำได้เลย", "Find your next everyday essential, wrapped in a little tropical warmth.", "필요한 앱을 고르고 소개 페이지를 만나 보세요.", "选择所需应用，打开它的介绍页面。", "अपना अगला ज़रूरी ऐप चुनें और उसका परिचय पेज खोलें।"],
-    "chips_free": ["ใช้ฟรี", "Free to use", "무료 사용", "免费使用", "मुफ़्त"],
-    "chips_noads": ["", "", "", "", ""],
-    "chips_notrack": ["ไม่มีตัวติดตาม", "No trackers", "추적 없음", "无追踪", "कोई ट्रैकर नहीं"],
     "apps_h": ["แอปของเรา", "Our apps", "앱 둘러보기", "我们的应用", "हमारे ऐप"],
-    "local_h_kr": ["สำหรับเกาหลี", "Made for Korea", "한국을 위한 앱", "韩国本地应用", "कोरिया के लिए"],
-    "local_h_th": ["สำหรับประเทศไทย", "Made for Thailand", "태국을 위한 앱", "泰国本地应用", "थाईलैंड के लिए"],
     "open": ["ดูรายละเอียด", "Explore app", "자세히 보기", "查看详情", "ऐप देखें"],
-    "soon_h": ["กำลังเตรียมให้บริการ", "On the horizon", "곧 만나요", "即将推出", "जल्द आ रहा है"],
-    "soon_sub": ["แอปใหม่กำลังอยู่ระหว่างการพัฒนา", "Something new is taking shape.", "새로운 앱을 준비하고 있어요.", "新应用正在准备中。", "कुछ नया तैयार हो रहा है।"],
-    "soon_badge": ["เร็ว ๆ นี้", "Coming soon", "곧 공개", "即将推出", "जल्द ही"],
     "dev_badge": ["กำลังพัฒนา", "In development", "개발 중", "开发中", "विकासाधीन"],
     "contact_h": ["มาคุยกัน", "Let’s talk", "문의하기", "联系我们", "बात करें"],
     "contact_p": ["ข้อเสนอแนะหรือคำถาม ส่งอีเมลหาเราได้เลย", "A question, an idea, or just want to say hello?", "앱에 대한 의견이나 질문을 보내 주세요.", "有任何意见或问题，欢迎发邮件给我们。", "कोई सवाल या सुझाव? हमें ईमेल करें।"],
@@ -153,30 +144,6 @@ def icon(name, extra=""):
     return ICONS[name].replace("<svg ", f'<svg class="ic {extra}" ', 1)
 
 
-def card(app, index, default_index):
-    start, end, ink = PALETTES[app["id"]]
-    style = f"--card-start:{start};--card-end:{end};--card-ink:{ink};--i:{index}"
-    name = html.escape(app["name"])
-    category = S["cat_" + app["id"]][default_index]
-    description = S["d_" + app["id"]][default_index]
-    copy = f'''<span class="app-copy">
-  <span class="cat" data-i18n="cat_{app['id']}">{html.escape(category)}</span>
-  <span class="app-name">{name}</span>
-  <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
-</span>'''
-    picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    palm = '<svg class="palm" viewBox="0 0 120 120" aria-hidden="true"><path d="M13 115C34 88 51 58 67 22M65 25C46 13 32 13 13 23c23 0 36 8 50 10M67 23C55 4 43 0 30 1c18 8 23 17 32 28M69 25C78 5 88 1 104 2c-18 10-23 18-30 28M69 28c19-9 33-7 47 3-21-2-32 3-43 4M63 37C42 31 29 36 17 50c21-8 32-5 42-5"/></svg>'
-    if app["live"]:
-        action = f'<span class="cta"><span data-i18n="open">{S["open"][default_index]}</span>{icon("arrow")}</span>'
-        return f'''<li class="m-stagger" style="{style}">
-<a class="card" href="{app['url']}" data-app="{app['id']}" data-press data-ripple>{palm}{copy}{picture}{action}</a>
-</li>'''
-    action = f'<span class="cta status">{icon("clock")}<span data-i18n="dev_badge">{S["dev_badge"][default_index]}</span></span>'
-    return f'''<li class="m-stagger" style="{style}">
-<div class="card soon" data-app="{app['id']}" aria-disabled="true">{palm}{copy}{picture}{action}</div>
-</li>'''
-
-
 PLAY_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M3.2 2.4c-.4.4-.6 1-.6 1.7v15.8c0 .7.2 1.3.6 1.7l.1.1 8.9-8.9v-.2L3.3 2.3l-.1.1z"/><path fill="#FBBC04" d="M16.4 15.5 12.6 11.7v-.2l3.8-3.8.1.1 4.5 2.6c1.2.7 1.2 1.9 0 2.6l-4.5 2.5-.1.1z"/><path fill="#34A853" d="M16.5 15.4 12.6 11.5 3.2 20.9c.5.5 1.2.6 2 .1l11.2-6.4.1-.2z"/><path fill="#EA4335" d="M16.5 8.8 5.2 2.3c-.8-.5-1.5-.4-2 .1l9.4 9.3 3.9-2.9z"/></svg>'
 APPLE_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.37 12.64c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.61 2.25 2.76 2.21 1.11-.04 1.53-.71 2.87-.71 1.34 0 1.72.71 2.89.69 1.19-.02 1.95-1.08 2.68-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.34-3.54zM14.7 6.55c.61-.74 1.02-1.77.91-2.8-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.21z"/></svg>'
 
@@ -221,68 +188,35 @@ def store_card(app, index, default_index):
 
 
 def render_page(page):
-    apps = [a for a in APPS if a["region"] in page["regions"] and not (a.get("th_only") and page["slug"] != "th")]
-    local_apps = [a for a in apps if a["region"] != "global"]
-    global_live = [a for a in apps if a["region"] == "global" and a["live"]]
-    global_upcoming = [a for a in apps if a["region"] == "global" and not a["live"]]
+    """Render the Thailand hub: three fixed store cards, no region label text."""
     index = LANGS.index(next(item for item in LANGS if item[0] == page["default"]))
     url = SITE + "/" + page["path"]
     title = S["doc_title"][index]
-    region = S["region_" + page["slug"]][index]
-    # Local apps first, then worldwide — one grid so card gaps stay even.
-    # The Thailand branch below must not change this worldwide/Korea markup.
-    css_v = "11"
-    if page["slug"] == "th":
-        css_v = "14"
-        by_id = {a["id"]: a for a in APPS}
-        ordered_live = [by_id[i] for i in TH_STORE_ORDER]
-        for app_id, intro in TH_INTRO.items():
-            if by_id[app_id].get("url") != intro or "join.html" in intro:
-                raise SystemExit(f"{app_id} store buttons must use the intro page, not a tester join URL")
-        if "fuelkr" in TH_STORE_ORDER:
-            raise SystemExit("Korea-only fuelkr must not appear on the Thailand hub")
-        cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
-        local_markup = ""
-        upcoming_markup = ""
-    else:
-        ordered_live = local_apps + global_live
-        cards = "\n".join(card(a, i + 2, index) for i, a in enumerate(ordered_live))
-        local_markup = ""
-        upcoming_markup = ""
-        if global_upcoming:
-            soon_cards = "\n".join(card(a, i + 8, index) for i, a in enumerate(global_upcoming))
-            upcoming_markup = f'''<section class="soon-section" aria-labelledby="soonH">
-<h2 id="soonH" class="section-title" data-i18n="soon_h">{S["soon_h"][index]}</h2>
-<p class="section-sub" data-i18n="soon_sub">{S["soon_sub"][index]}</p>
-<ul class="app-grid">{soon_cards}</ul>
-</section>'''
+    css_v = "14"
+    by_id = {a["id"]: a for a in APPS}
+    ordered_live = [by_id[i] for i in TH_STORE_ORDER]
+    for app_id, intro in TH_INTRO.items():
+        if by_id[app_id].get("url") != intro or "join.html" in intro:
+            raise SystemExit(f"{app_id} store buttons must use the intro page, not a tester join URL")
+    if "fuelkr" in TH_STORE_ORDER:
+        raise SystemExit("Korea-only fuelkr must not appear on the Thailand hub")
+    cards = "\n".join(store_card(a, i + 2, index) for i, a in enumerate(ordered_live))
     languages = "\n".join(
         f'<li role="none"><button role="menuitemradio" aria-checked="false" lang="{"zh-Hans" if code == "zh" else code}" data-set-lang="{code}">{icon("check", "tick")}<span>{name}</span></button></li>'
         for code, name in LANGS
     )
     logo = '<picture><source media="(prefers-color-scheme: dark)" srcset="/icons/logo-mark-dark.png"><img src="/icons/logo-mark.png" alt="AA" width="180" height="45"></picture>'
     hub_strings = i18n_js()
-    if page["slug"] == "th":
-        for i, (code, _) in enumerate(LANGS):
-            for key, values in TH_S.items():
-                hub_strings[code][key] = values[i]
-            # Hero chips are Thailand-only removals; keep S so / and /kr/ stay identical.
-            for key in ("chips_free", "chips_noads", "chips_notrack"):
-                hub_strings[code].pop(key, None)
-        chips_markup = ""
-    else:
-        chips_markup = (
-            f'  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}'
-            f'<span data-i18n="chips_free">{S["chips_free"][index]}</span></li>'
-            f'<li>{icon("shield")}<span data-i18n="chips_notrack">{S["chips_notrack"][index]}</span></li></ul>\n'
-        )
+    for i, (code, _) in enumerate(LANGS):
+        for key, values in TH_S.items():
+            hub_strings[code][key] = values[i]
     return f'''<!doctype html>
 <html lang="{page['default']}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title>
-<meta name="description" content="MOTOR AA — {html.escape(region)}. Pick an app to open its introduction page.">
+<meta name="description" content="MOTOR AA. Pick an app to open its introduction page.">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#fffaf5">
 <link rel="canonical" href="{url}">
@@ -303,7 +237,7 @@ def render_page(page):
 <body data-region="{page['slug']}">
 <div class="bg" aria-hidden="true"><i class="leaf leaf-one"></i><i class="leaf leaf-two"></i></div>
 <header class="bar">
- <span class="region" data-i18n="region_{page['slug']}">{html.escape(region)}</span>
+ <span class="region" aria-hidden="true"></span>
  <span class="brand">{logo}</span>
  <div class="langwrap">
   <button class="lang-btn" id="langBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="langMenu" aria-label="Language" data-press>{icon("globe")}<span id="langCur">{dict(LANGS)[page['default']]}</span></button>
@@ -312,14 +246,13 @@ def render_page(page):
 </header>
 <main data-lang-root>
  <section class="hero">
-  <span class="eyebrow m-stagger" style="--i:0">{icon("spark")}<span data-i18n="region_{page['slug']}">{html.escape(region)}</span></span>
+  <span class="eyebrow m-stagger" style="--i:0">{icon("spark")}</span>
   <h1 class="m-stagger" style="--i:1" data-i18n="h1">{html.escape(S['h1'][index])}</h1>
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
-{chips_markup} </section>
+ </section>
  <section class="apps-block">
   <ul class="app-grid">{cards}</ul>
  </section>
- {upcoming_markup}
  <section class="contact m-stagger" style="--i:6">
   <span class="contact-icon">{icon("mail")}</span>
   <div><h2 data-i18n="contact_h">{S['contact_h'][index]}</h2><p data-i18n="contact_p">{S['contact_p'][index]}</p></div>
@@ -358,12 +291,37 @@ def fonts():
         subprocess.check_call(["pyftsubset", src, f"--unicodes={unicodes}", "--flavor=woff2", f"--output-file={ROOT}/fonts/noto-deva.woff2", "--layout-features=*"])
 
 
+def render_redirect():
+    """Retired hub path: forward to /th/, keeping ?lang= and any other query/hash."""
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOTOR AA</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="{TH_URL}">
+<script>location.replace("/th/" + location.search + location.hash);</script>
+<meta http-equiv="refresh" content="0;url=/th/">
+</head>
+<body>
+<p><a href="/th/">MOTOR AA</a></p>
+</body>
+</html>
+'''
+
+
 def build():
     for page in PAGES:
         directory = os.path.join(ROOT, page["path"])
         os.makedirs(directory, exist_ok=True)
         with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
             f.write(render_page(page).replace("|", " "))
+    for path in REDIRECTS:
+        directory = os.path.join(ROOT, path)
+        os.makedirs(directory, exist_ok=True)
+        with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
+            f.write(render_redirect())
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         f.writelines(f'<url><loc>{SITE}/{p["path"]}</loc></url>\n' for p in PAGES)
@@ -374,4 +332,4 @@ if __name__ == "__main__":
     build()
     if "--fonts" in sys.argv:
         fonts()
-    print("Built /, /kr/, /th/ and sitemap.xml")
+    print("Built /th/, redirects at / and /kr/, and sitemap.xml")
