@@ -4,7 +4,7 @@ Three **independent** static app hubs, with no cross-links between regions:
 
 - `/` — Worldwide, English by default; global apps only.
 - `/kr/` — Korea + Worldwide, Korean by default; global and Korea-only apps.
-- `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Every app except the Korea-only one, each with store buttons.
+- `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only น้ำมันถูก, AA Franchise, and BGAA, each with store buttons.
 
 Published at <https://motoraathailand.github.io/>. Language choices are scoped to
 each regional page. `?lang=` temporarily overrides the selected language;
@@ -24,14 +24,15 @@ renders the three `index.html` files and `sitemap.xml`. On `/` and `/kr/`, app
 cards have a region of `global` or `kr`. `live=True` adds that app's introduction
 URL; otherwise it is a non-linked, in-development card. `주유소를부탁해` is
 Korea-only and awaits its introduction URL. `/th/` does not use that grid and
-does not show `주유소를부탁해`. The generator writes น้ำมันถูก, AA Franchise, BGAA,
-AAAi, AutoReport, AA Calc, Moffee, GREENLIGHT, then EZZ. EZZ is registered as a
-global app but filtered off `/` and `/kr/`. Each card has a Google Play
-button and an App Store button, and no leaf decoration. Both Nammanthuk buttons
-open `https://motoraathailand.github.io/nammanthuk-site/`, and both AA Franchise
-buttons open `https://motoraathailand.github.io/aafranchise-site/`. Those intro
-pages follow the device language. Every other store button is a localized
-in-development control. Thailand-only stylesheet rules are appended under
+does not show `주유소를부탁해`. The generator writes only น้ำมันถูก, AA Franchise,
+then BGAA. Other apps stay in the registry and are hidden from `/th/`. EZZ is
+registered as a global app but filtered off `/` and `/kr/`. Each card has a
+Google Play button and an App Store button, and no leaf decoration. Both
+Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`,
+and both AA Franchise buttons open
+`https://motoraathailand.github.io/aafranchise-site/`. Those intro pages follow
+the device language. BGAA store buttons are localized in-development
+controls. Thailand-only stylesheet rules are appended under
 `body[data-region="th"]` and the Thailand page loads them with its own CSS query.
 
 `assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is

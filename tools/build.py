@@ -38,15 +38,16 @@ APPS = [
          play_tester="https://motoraathailand.github.io/nammanthuk-site/join.html"),
     dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
     dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
-    # Global mini-game app, listed on the Thailand hub only for now so / and /kr/ stay unchanged.
+    # Global mini-game app, kept in the registry but not shown on /th/ for now, so / and /kr/ stay unchanged.
     dict(id="ezz", name="EZZ", icon="icons/ezz.png", url=None, live=False, dev=True, region="global", th_only=True),
 ]
 for app in APPS:
     app.setdefault("region", "global")
 
 # Thailand market page only. Worldwide and Korea keep the registry order above.
-# Korea-only fuelkr is omitted.
-TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa", "aaai", "autoreport", "aacalc", "moffee", "scanner", "ezz")
+# Show only nammanthuk, AA Franchise, and BGAA, in that order. Other apps stay
+# in the registry but are hidden from /th/. Korea-only fuelkr stays omitted.
+TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa")
 # These cards link both store buttons to the app intro page. The pages follow
 # ?lang=, then the saved choice, then the device language, and fall back to
 # English. Not join.html.
