@@ -11,11 +11,11 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parent.parent
 # Deleted hubs: these files must not exist.
 DELETED = ('index.html', 'kr/index.html', 'kr')
-TH_URL = 'https://motoraathailand.github.io/th/'
+TH_URL = 'https://motoraathailand.github.io/th'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
     # /th/ after removing the region label text only (cards, store buttons, star unchanged).
-    'th/index.html': '6769722dc1b682214d4e8f54e21a51f94d68d9caafd9d8a8cce858f26e46e150',
+    'th/index.html': '6655e4c3805eea5c04540007ea5b842b29eb771507b226f871131e9be3bd22ec',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
@@ -144,6 +144,8 @@ class Hubs(unittest.TestCase):
         star = '<span class="eyebrow m-stagger" style="--i:0"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg></span>'
         self.assertIn(star, text)
         self.assertNotIn('motoraathailand.github.io/kr/', text)
+        self.assertIn('<link rel="canonical" href="%s">' % TH_URL, text)
+        self.assertIn('<meta property="og:url" content="%s">' % TH_URL, text)
 
     def test_rebuild_matches_committed_output(self):
         spec = importlib.util.spec_from_file_location('hubbuild', ROOT / 'tools' / 'build.py')

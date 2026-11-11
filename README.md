@@ -3,7 +3,7 @@
 Only the **Thailand** hub is operated:
 
 - `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only น้ำมันถูก, AA Franchise, and BGAA, each with store buttons. The hero keeps its star mark without a region label.
-- `/` and `/kr/` — deleted (Nov 11, 2026). No page and no redirect is built there; GitHub Pages serves `404.html` (a plain not-found page with a link to `/th/`). Intro sites link to `/th/` directly.
+- `/` and `/kr/` — deleted (Nov 11, 2026). No page and no redirect is built there; GitHub Pages serves `404.html` (a plain not-found page with a link to `/th`). Intro sites link to `https://motoraathailand.github.io/th` directly; canonical, og:url and the sitemap use that same address.
 
 Published at <https://motoraathailand.github.io/>. Language choices are scoped to
 each regional page. `?lang=` temporarily overrides the selected language;
