@@ -45,17 +45,20 @@ APPS = [
 for app in APPS:
     app.setdefault("region", "global")
 
-# Thailand hub. Show only nammanthuk, AA Franchise, and BGAA, in that order. Other apps stay
+# Thailand hub. Thailand-only apps first (nammanthuk, AA Franchise), then AAAi,
+# then BGAA. Other apps stay
 # in the registry but are hidden from /th/. Korea-only fuelkr stays omitted.
-TH_STORE_ORDER = ("nammanthuk", "aafranchise", "bgaa")
+TH_STORE_ORDER = ("nammanthuk", "aafranchise", "aaai", "bgaa")
 # These cards link both store buttons to the app intro page. The pages follow
 # ?lang=, then the saved choice, then the device language, and fall back to
 # English. Not join.html.
 NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
 AAFRANCHISE_INTRO = "https://motoraathailand.github.io/aafranchise-site/"
+AAAI_INTRO = "https://aaai-iji8.onrender.com/about"
 TH_INTRO = {
     "nammanthuk": NAMMANTHUK_INTRO,
     "aafranchise": AAFRANCHISE_INTRO,
+    "aaai": AAAI_INTRO,
 }
 
 PALETTES = {
@@ -176,7 +179,7 @@ def store_card(app, index, default_index):
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    # Nammanthuk and AA Franchise link both stores to their intro pages.
+    # Nammanthuk, AA Franchise and AAAi link both stores to their intro pages.
     # Every other card stays in development.
     href = TH_INTRO.get(app["id"])
     buttons = store_button("google-play", default_index, href) + store_button("app-store", default_index, href)

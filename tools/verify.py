@@ -15,7 +15,7 @@ TH_URL = 'https://motoraathailand.github.io/th'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
     # /th/ after removing the region label text only (cards, store buttons, star unchanged).
-    'th/index.html': '6655e4c3805eea5c04540007ea5b842b29eb771507b226f871131e9be3bd22ec',
+    'th/index.html': '79c1580a5f5a7e71b27cb6be8a2b0a88975d8453d199365e84be3a5e26c3b6ab',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
@@ -25,8 +25,9 @@ REGION_TEXT = ('ไทย + ทั่วโลก', 'Thailand + Worldwide', '태
 CSS_PREFIX_SHA256 = 'd6430472029f7db1ab721763ef2eeb378c2cb32fce77a441cc26b1c2d45e4104'
 NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
 AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
-TH_ORDER = ('nammanthuk', 'aafranchise', 'bgaa')
-TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'BGAA')
+AAAI_INTRO = 'https://aaai-iji8.onrender.com/about'
+TH_ORDER = ('nammanthuk', 'aafranchise', 'aaai', 'bgaa')
+TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'AAAi', 'BGAA')
 
 class Page(HTMLParser):
     def __init__(self):
@@ -82,7 +83,7 @@ class Hubs(unittest.TestCase):
         self.assertEqual(page.body_region, 'th')
         self.assertEqual([c['id'] for c in page.cards], list(TH_ORDER))
         self.assertEqual(tuple(page.names), TH_NAMES)
-        self.assertEqual(len(page.stores), 6)
+        self.assertEqual(len(page.stores), 8)
         self.assertNotIn('soon-section', text)
         self.assertNotIn('class="cta"', text)
         self.assertNotIn('class="palm"', text)
@@ -101,6 +102,10 @@ class Hubs(unittest.TestCase):
         expect['nammanthuk'] = (
             ('google-play', 'live', NAMMANTHUK_INTRO),
             ('app-store', 'live', NAMMANTHUK_INTRO),
+        )
+        expect['aaai'] = (
+            ('google-play', 'live', AAAI_INTRO),
+            ('app-store', 'live', AAAI_INTRO),
         )
         expect['aafranchise'] = (
             ('google-play', 'live', AAFRANCHISE_INTRO),
@@ -173,6 +178,7 @@ class Hubs(unittest.TestCase):
         for url, needle in (
             (NAMMANTHUK_INTRO, 'น้ำมันถูก'),
             (AAFRANCHISE_INTRO, 'AA Franchise'),
+            (AAAI_INTRO, 'AAAi'),
         ):
             req = urllib.request.Request(url, headers={'User-Agent': 'motoraa-hub-verify'})
             with urllib.request.urlopen(req, timeout=30) as res:
