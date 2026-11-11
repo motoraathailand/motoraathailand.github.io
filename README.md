@@ -28,8 +28,9 @@ does not show `주유소를부탁해`. The generator writes น้ำมัน�
 AAAi, AutoReport, AA Calc, Moffee, GREENLIGHT, then EZZ. EZZ is registered as a
 global app but filtered off `/` and `/kr/`. Each card has a Google Play
 button and an App Store button, and no leaf decoration. Both Nammanthuk buttons
-open `https://motoraathailand.github.io/nammanthuk-site/`, the intro page that
-follows the device language. Every other store button is a localized
+open `https://motoraathailand.github.io/nammanthuk-site/`, and both AA Franchise
+buttons open `https://motoraathailand.github.io/aafranchise-site/`. Those intro
+pages follow the device language. Every other store button is a localized
 in-development control. Thailand-only stylesheet rules are appended under
 `body[data-region="th"]` and the Thailand page loads them with its own CSS query.
 

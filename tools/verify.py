@@ -33,6 +33,7 @@ STABLE_SHA256 = {
 }
 CSS_PREFIX_SHA256 = 'd6430472029f7db1ab721763ef2eeb378c2cb32fce77a441cc26b1c2d45e4104'
 NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
+AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
 TH_ORDER = ('nammanthuk', 'aafranchise', 'bgaa', 'aaai', 'autoreport', 'aacalc', 'moffee', 'scanner', 'ezz')
 TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'BGAA', 'AAAi', 'AutoReport', 'AA Calc', 'Moffee', 'GREENLIGHT', 'EZZ')
 
@@ -120,6 +121,10 @@ class Hubs(unittest.TestCase):
             ('google-play', 'live', NAMMANTHUK_INTRO),
             ('app-store', 'live', NAMMANTHUK_INTRO),
         )
+        expect['aafranchise'] = (
+            ('google-play', 'live', AAFRANCHISE_INTRO),
+            ('app-store', 'live', AAFRANCHISE_INTRO),
+        )
         for card in page.cards:
             self.assertFalse(card['linked'])
             self.assertEqual(len(card['stores']), 2)
@@ -170,18 +175,21 @@ class Hubs(unittest.TestCase):
         self.assertIn("return norm(q) || norm(store()) || dev || 'en';", js)
         self.assertIn("var STORE = 'motoraa.lang.' + region;", js)
 
-    def test_nammanthuk_intro_resolves(self):
+    def test_intro_pages_resolve(self):
         import urllib.request
-        url = NAMMANTHUK_INTRO
-        req = urllib.request.Request(url, headers={'User-Agent': 'motoraa-hub-verify'})
-        with urllib.request.urlopen(req, timeout=30) as res:
-            body = res.read().decode('utf-8', 'replace')
-            self.assertEqual(res.status, 200, url)
-            self.assertEqual(res.geturl(), url)
-            self.assertIn('html', res.headers.get('content-type', ''))
-        self.assertIn('rel="canonical" href="%s"' % url, body)
-        self.assertIn('น้ำมันถูก', body)
-        self.assertNotIn('join.html"', 'href="%s"' % url)
+        for url, needle in (
+            (NAMMANTHUK_INTRO, 'น้ำมันถูก'),
+            (AAFRANCHISE_INTRO, 'AA Franchise'),
+        ):
+            req = urllib.request.Request(url, headers={'User-Agent': 'motoraa-hub-verify'})
+            with urllib.request.urlopen(req, timeout=30) as res:
+                body = res.read().decode('utf-8', 'replace')
+                self.assertEqual(res.status, 200, url)
+                self.assertEqual(res.geturl(), url)
+                self.assertIn('html', res.headers.get('content-type', ''))
+            self.assertIn('rel="canonical" href="%s"' % url, body)
+            self.assertIn(needle, body)
+            self.assertNotIn('join.html"', 'href="%s"' % url)
 
     def test_sitemap(self):
         xml = ET.parse(ROOT / 'sitemap.xml')
