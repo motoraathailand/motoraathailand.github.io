@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static invariants for the three independent regional app hubs."""
+"""Static invariants for the MOTOR AA hub: /th/ only; / and /kr/ redirect to /th/."""
 from html.parser import HTMLParser
 from pathlib import Path
 import hashlib
@@ -9,28 +9,19 @@ from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
-EXPECTED = {
-    'world': {
-        'global': {'aaai', 'autoreport', 'aacalc', 'moffee', 'bgaa'},
-        'upcoming': {'scanner'},
-        'default': 'en', 'absent': {'nammanthuk', 'aafranchise', 'fuelkr', 'ezz'},
-    },
-    'kr': {
-        'global': {'aaai', 'autoreport', 'aacalc', 'moffee', 'bgaa'},
-        'upcoming': {'scanner', 'fuelkr'},
-        'default': 'ko', 'absent': {'nammanthuk', 'aafranchise', 'ezz'},
-    },
-}
-# Bytes of files this change must not touch. Thailand HTML and the appended
-# hub.css rules are the only generated/style output that may differ.
+# Retired hubs: each path is only a redirect to the Thailand hub.
+REDIRECTS = ('index.html', 'kr/index.html')
+TH_URL = 'https://motoraathailand.github.io/th/'
+# Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
-    'index.html': '296d5f01d1d63aa0507e990a04a1b3738706d15826fad7b10822fac7aca32600',
-    'kr/index.html': 'c2f7f4d4957e799a54ee02b3e955332143752ff988a664dee5820f3a16b50a16',
-    'sitemap.xml': '06ce531f9db8fc09ae7e67e7942e2be6f40d3f0a9924cd549ed5de6f6a8ce4c0',
+    # /th/ after removing the region label text only (cards, store buttons, star unchanged).
+    'th/index.html': '6769722dc1b682214d4e8f54e21a51f94d68d9caafd9d8a8cce858f26e46e150',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
 }
+REGION_TEXT = ('ไทย + ทั่วโลก', 'Thailand + Worldwide', '태국 + 전 세계', '泰国 + 全球', 'थाईलैंड + दुनिया भर',
+               'Worldwide apps', '한국 + 전 세계', 'Korea + Worldwide', '전 세계 앱')
 CSS_PREFIX_SHA256 = 'd6430472029f7db1ab721763ef2eeb378c2cb32fce77a441cc26b1c2d45e4104'
 NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
 AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
@@ -75,24 +66,21 @@ class Page(HTMLParser):
         if self._store: self._store_buf.append(data)
 
 class Hubs(unittest.TestCase):
-    def test_worldwide_and_korea_hubs(self):
-        for region, expected in EXPECTED.items():
-            with self.subTest(region=region):
-                directory = ROOT if region == 'world' else ROOT / region
-                page = Page(); page.feed((directory / 'index.html').read_text())
-                self.assertEqual(page.lang, expected['default'])
-                self.assertEqual(page.body_region, region)
-                self.assertEqual({c['id'] for c in page.cards if c['linked']}, expected['global'])
-                self.assertEqual({c['id'] for c in page.cards if not c['linked']}, expected['upcoming'])
-                self.assertFalse(expected['absent'] & {c['id'] for c in page.cards})
-                self.assertEqual(page.brand, ['/icons/logo-mark.png'])
-                for asset in page.assets:
-                    self.assertTrue((ROOT / asset.split('?', 1)[0].lstrip('/')).resolve().is_file(), asset)
-                for href in page.links:
-                    parsed = urlsplit(href)
-                    self.assertTrue(parsed.scheme in ('https', 'mailto'), f'Unexpected internal link: {href}')
-                    if parsed.scheme == 'https':
-                        self.assertNotIn(parsed.path, ('/', '/kr/', '/th/'), f'Hub cross-link: {href}')
+    def test_retired_hubs_redirect_to_thailand(self):
+        for rel in REDIRECTS:
+            with self.subTest(page=rel):
+                text = (ROOT / rel).read_text(encoding='utf-8')
+                self.assertIn('<link rel="canonical" href="%s">' % TH_URL, text)
+                self.assertIn('<meta http-equiv="refresh" content="0;url=/th/">', text)
+                self.assertIn('location.replace("/th/" + location.search + location.hash);', text)
+                self.assertLess(text.index('location.replace'), text.index('http-equiv="refresh"'))
+                self.assertIn('noindex', text)
+                page = Page(); page.feed(text)
+                self.assertEqual(page.cards, [])
+                self.assertEqual(page.links, ['/th/'])
+                for gone in ('data-app', 'HUB_STRINGS', 'hub.js', 'app-grid', 'chips', 'lang-menu'):
+                    self.assertNotIn(gone, text)
+                self.assertLess(len(text), 1200)
 
     def test_thailand_cards_and_store_buttons(self):
         text = (ROOT / 'th' / 'index.html').read_text(encoding='utf-8')
@@ -155,18 +143,23 @@ class Hubs(unittest.TestCase):
         self.assertNotIn('"chips_free"', text)
         self.assertNotIn('"chips_noads"', text)
         self.assertNotIn('"chips_notrack"', text)
+        # The region label text is gone in every language; the star stays.
+        self.assertNotIn('region_', text)
+        for label in REGION_TEXT:
+            self.assertNotIn(label, text)
+        self.assertIn('<span class="region" aria-hidden="true"></span>', text)
+        star = '<span class="eyebrow m-stagger" style="--i:0"><svg class="ic " viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.1 6.9L21 12l-6.9 2.1L12 21l-2.1-6.9L3 12l6.9-2.1z"/></svg></span>'
+        self.assertIn(star, text)
+        self.assertNotIn('motoraathailand.github.io/kr/', text)
 
-    def test_rebuild_leaves_root_and_korea_bytes(self):
+    def test_rebuild_matches_committed_output(self):
         spec = importlib.util.spec_from_file_location('hubbuild', ROOT / 'tools' / 'build.py')
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
-        for page in mod.PAGES:
-            rendered = mod.render_page(page).replace('|', ' ')
-            path = ROOT / 'index.html' if page['slug'] == 'world' else ROOT / page['path'] / 'index.html'
-            if page['slug'] == 'th':
-                self.assertEqual(rendered, (ROOT / 'th' / 'index.html').read_text(encoding='utf-8'))
-                continue
-            self.assertEqual(rendered, path.read_text(encoding='utf-8'))
+        self.assertEqual([p['slug'] for p in mod.PAGES], ['th'])
+        self.assertEqual(mod.render_page(mod.PAGES[0]).replace('|', ' '), (ROOT / 'th' / 'index.html').read_text(encoding='utf-8'))
+        for rel in REDIRECTS:
+            self.assertEqual(mod.render_redirect(), (ROOT / rel).read_text(encoding='utf-8'))
         for rel, digest in STABLE_SHA256.items():
             body = (ROOT / rel).read_bytes()
             self.assertEqual(hashlib.sha256(body).hexdigest(), digest, rel)
@@ -200,6 +193,6 @@ class Hubs(unittest.TestCase):
     def test_sitemap(self):
         xml = ET.parse(ROOT / 'sitemap.xml')
         actual = [item.text for item in xml.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-        self.assertEqual(actual, ['https://motoraathailand.github.io/', 'https://motoraathailand.github.io/kr/', 'https://motoraathailand.github.io/th/'])
+        self.assertEqual(actual, [TH_URL])
 
 if __name__ == '__main__': unittest.main()

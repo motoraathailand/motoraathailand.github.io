@@ -1,10 +1,9 @@
-# MOTOR AA regional hubs
+# MOTOR AA app hub
 
-Three **independent** static app hubs, with no cross-links between regions:
+Only the **Thailand** hub is operated:
 
-- `/` — Worldwide, English by default; global apps only.
-- `/kr/` — Korea + Worldwide, Korean by default; global and Korea-only apps.
-- `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only น้ำมันถูก, AA Franchise, and BGAA, each with store buttons.
+- `/th/` — Thailand market. Thai is the primary version of the page, not a forced language. Only น้ำมันถูก, AA Franchise, and BGAA, each with store buttons. The hero keeps its star mark without a region label.
+- `/` and `/kr/` — retired (Nov 11, 2026). Each is a small redirect page to `/th/` (JS `location.replace` keeping `?lang=` and the hash, plus a meta refresh and a canonical to `/th/`), so old links keep working.
 
 Published at <https://motoraathailand.github.io/>. Language choices are scoped to
 each regional page. `?lang=` temporarily overrides the selected language;
@@ -20,13 +19,9 @@ python3 tools/build.py --fonts
 ```
 
 `tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
-renders the three `index.html` files and `sitemap.xml`. On `/` and `/kr/`, app
-cards have a region of `global` or `kr`. `live=True` adds that app's introduction
-URL; otherwise it is a non-linked, in-development card. `주유소를부탁해` is
-Korea-only and awaits its introduction URL. `/th/` does not use that grid and
-does not show `주유소를부탁해`. The generator writes only น้ำมันถูก, AA Franchise,
-then BGAA. Other apps stay in the registry and are hidden from `/th/`. EZZ is
-registered as a global app but filtered off `/` and `/kr/`. Each card has a
+renders `th/index.html`, the two redirect pages and `sitemap.xml` (which lists
+only `/th/`). `/th/` does not show `주유소를부탁해`. The generator writes only น้ำมันถูก, AA Franchise,
+then BGAA. Other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. Each card has a
 Google Play button and an App Store button, and no leaf decoration. Both
 Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`,
 and both AA Franchise buttons open
@@ -38,7 +33,7 @@ controls. Thailand-only stylesheet rules are appended under
 `assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is
 transparent winged-AA-only line art cropped from the supplied reference; the
 curved MOTOR AA / SARABURI lettering is excluded. Every page loads those assets
-through root-relative `/assets` and `/icons` paths, so the same file works at all three URLs.
+through root-relative `/assets` and `/icons` paths, so the same file works at any URL.
 `hub.js` does not navigate between pages. Contact: motoraathailand@gmail.com.
 
 Fonts are self-hosted IBM Plex Sans and Noto subsets (SIL OFL); no ad, analytics,
@@ -52,8 +47,8 @@ A pre-rebuild archive is stored outside the repository in
 python3 tools/verify.py
 ```
 
-The verification fails on missing or incorrect apps per region, a Thailand page
-that is not the three cards in order with six store buttons in the right state,
-a rebuild that changes `/` or `/kr/` bytes, internal hub cross-links, wrong
-default languages, non-winged-AA header images, broken local asset paths, or
-sitemap omissions.
+The verification fails when `/` or `/kr/` is not a redirect to `/th/`, a Thailand
+page that is not the three cards in order with six store buttons in the right
+state, region label text or hub cross-links on `/th/`, a rebuild that differs
+from the committed output, non-winged-AA header images, broken local asset
+paths, or a sitemap that lists anything but `/th/`.
