@@ -149,6 +149,12 @@ class Hubs(unittest.TestCase):
             if parsed.scheme == 'https':
                 self.assertNotIn(parsed.path, ('/', '/kr/', '/th/'), href)
         self.assertEqual(page.brand, ['/icons/logo-mark.png'])
+        self.assertNotIn('class="chips"', text)
+        self.assertNotIn('data-i18n="chips_free"', text)
+        self.assertNotIn('data-i18n="chips_notrack"', text)
+        self.assertNotIn('"chips_free"', text)
+        self.assertNotIn('"chips_noads"', text)
+        self.assertNotIn('"chips_notrack"', text)
 
     def test_rebuild_leaves_root_and_korea_bytes(self):
         spec = importlib.util.spec_from_file_location('hubbuild', ROOT / 'tools' / 'build.py')

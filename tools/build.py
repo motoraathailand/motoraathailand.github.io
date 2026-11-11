@@ -266,6 +266,16 @@ def render_page(page):
         for i, (code, _) in enumerate(LANGS):
             for key, values in TH_S.items():
                 hub_strings[code][key] = values[i]
+            # Hero chips are Thailand-only removals; keep S so / and /kr/ stay identical.
+            for key in ("chips_free", "chips_noads", "chips_notrack"):
+                hub_strings[code].pop(key, None)
+        chips_markup = ""
+    else:
+        chips_markup = (
+            f'  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}'
+            f'<span data-i18n="chips_free">{S["chips_free"][index]}</span></li>'
+            f'<li>{icon("shield")}<span data-i18n="chips_notrack">{S["chips_notrack"][index]}</span></li></ul>\n'
+        )
     return f'''<!doctype html>
 <html lang="{page['default']}">
 <head>
@@ -305,8 +315,7 @@ def render_page(page):
   <span class="eyebrow m-stagger" style="--i:0">{icon("spark")}<span data-i18n="region_{page['slug']}">{html.escape(region)}</span></span>
   <h1 class="m-stagger" style="--i:1" data-i18n="h1">{html.escape(S['h1'][index])}</h1>
   <p class="sub m-stagger" style="--i:2" data-i18n="sub">{html.escape(S['sub'][index])}</p>
-  <ul class="chips m-stagger" style="--i:3"><li>{icon("spark")}<span data-i18n="chips_free">{S['chips_free'][index]}</span></li><li>{icon("shield")}<span data-i18n="chips_notrack">{S['chips_notrack'][index]}</span></li></ul>
- </section>
+{chips_markup} </section>
  <section class="apps-block">
   <ul class="app-grid">{cards}</ul>
  </section>
