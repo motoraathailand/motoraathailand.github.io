@@ -34,8 +34,8 @@ STABLE_SHA256 = {
 CSS_PREFIX_SHA256 = 'd6430472029f7db1ab721763ef2eeb378c2cb32fce77a441cc26b1c2d45e4104'
 NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
 AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
-TH_ORDER = ('nammanthuk', 'aafranchise', 'bgaa', 'aaai', 'autoreport', 'aacalc', 'moffee', 'scanner', 'ezz')
-TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'BGAA', 'AAAi', 'AutoReport', 'AA Calc', 'Moffee', 'GREENLIGHT', 'EZZ')
+TH_ORDER = ('nammanthuk', 'aafranchise', 'bgaa')
+TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'BGAA')
 
 class Page(HTMLParser):
     def __init__(self):
@@ -101,7 +101,7 @@ class Hubs(unittest.TestCase):
         self.assertEqual(page.body_region, 'th')
         self.assertEqual([c['id'] for c in page.cards], list(TH_ORDER))
         self.assertEqual(tuple(page.names), TH_NAMES)
-        self.assertEqual(len(page.stores), 18)
+        self.assertEqual(len(page.stores), 6)
         self.assertNotIn('soon-section', text)
         self.assertNotIn('class="cta"', text)
         self.assertNotIn('class="palm"', text)
