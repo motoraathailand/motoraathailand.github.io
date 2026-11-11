@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static invariants for the MOTOR AA hub: /th/ only; / and /kr/ redirect to /th/."""
+"""Static invariants for the MOTOR AA hub: only /th/ exists; / and /kr/ are deleted."""
 from html.parser import HTMLParser
 from pathlib import Path
 import hashlib
@@ -9,8 +9,8 @@ from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
-# Retired hubs: each path is only a redirect to the Thailand hub.
-REDIRECTS = ('index.html', 'kr/index.html')
+# Deleted hubs: these files must not exist.
+DELETED = ('index.html', 'kr/index.html', 'kr')
 TH_URL = 'https://motoraathailand.github.io/th/'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
@@ -66,21 +66,14 @@ class Page(HTMLParser):
         if self._store: self._store_buf.append(data)
 
 class Hubs(unittest.TestCase):
-    def test_retired_hubs_redirect_to_thailand(self):
-        for rel in REDIRECTS:
-            with self.subTest(page=rel):
-                text = (ROOT / rel).read_text(encoding='utf-8')
-                self.assertIn('<link rel="canonical" href="%s">' % TH_URL, text)
-                self.assertIn('<meta http-equiv="refresh" content="0;url=/th/">', text)
-                self.assertIn('location.replace("/th/" + location.search + location.hash);', text)
-                self.assertLess(text.index('location.replace'), text.index('http-equiv="refresh"'))
-                self.assertIn('noindex', text)
-                page = Page(); page.feed(text)
-                self.assertEqual(page.cards, [])
-                self.assertEqual(page.links, ['/th/'])
-                for gone in ('data-app', 'HUB_STRINGS', 'hub.js', 'app-grid', 'chips', 'lang-menu'):
-                    self.assertNotIn(gone, text)
-                self.assertLess(len(text), 1200)
+    def test_world_and_korea_hubs_deleted(self):
+        for rel in DELETED:
+            self.assertFalse((ROOT / rel).exists(), rel)
+        html_pages = sorted(str(p.relative_to(ROOT)) for p in ROOT.rglob('*.html') if '.git' not in p.parts)
+        self.assertEqual(html_pages, ['404.html', 'th/index.html'])
+        notfound = (ROOT / '404.html').read_text(encoding='utf-8')
+        self.assertNotIn('http-equiv="refresh"', notfound)
+        self.assertNotIn('location.', notfound)
 
     def test_thailand_cards_and_store_buttons(self):
         text = (ROOT / 'th' / 'index.html').read_text(encoding='utf-8')
@@ -158,8 +151,7 @@ class Hubs(unittest.TestCase):
         spec.loader.exec_module(mod)
         self.assertEqual([p['slug'] for p in mod.PAGES], ['th'])
         self.assertEqual(mod.render_page(mod.PAGES[0]).replace('|', ' '), (ROOT / 'th' / 'index.html').read_text(encoding='utf-8'))
-        for rel in REDIRECTS:
-            self.assertEqual(mod.render_redirect(), (ROOT / rel).read_text(encoding='utf-8'))
+        self.assertFalse(hasattr(mod, 'render_redirect'))
         for rel, digest in STABLE_SHA256.items():
             body = (ROOT / rel).read_bytes()
             self.assertEqual(hashlib.sha256(body).hexdigest(), digest, rel)
