@@ -20,7 +20,8 @@ LANGS = [("th", "ไทย"), ("en", "English"), ("ko", "한국어"), ("zh", "�
 PAGES = [
     {"slug": "th", "path": "th/", "default": "th"},
 ]
-TH_URL = SITE + "/th/"
+# The owner writes the hub address without a trailing slash; Pages 301s it to /th/.
+TH_URL = SITE + "/th"
 
 # App registry. The Thailand hub shows three fixed cards, in order, with store
 # buttons. play_tester is kept on the registry for the apps' own introduction
@@ -187,7 +188,7 @@ def store_card(app, index, default_index):
 def render_page(page):
     """Render the Thailand hub: three fixed store cards, no region label text."""
     index = LANGS.index(next(item for item in LANGS if item[0] == page["default"]))
-    url = SITE + "/" + page["path"]
+    url = TH_URL
     title = S["doc_title"][index]
     css_v = "14"
     by_id = {a["id"]: a for a in APPS}
@@ -296,7 +297,7 @@ def build():
             f.write(render_page(page).replace("|", " "))
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        f.writelines(f'<url><loc>{SITE}/{p["path"]}</loc></url>\n' for p in PAGES)
+        f.write(f'<url><loc>{TH_URL}</loc></url>\n')
         f.write('</urlset>\n')
 
 
