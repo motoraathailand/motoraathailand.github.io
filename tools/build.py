@@ -55,10 +55,12 @@ TH_STORE_ORDER = ("nammanthuk", "aafranchise", "aaai", "bgaa")
 NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
 AAFRANCHISE_INTRO = "https://motoraathailand.github.io/aafranchise-site/"
 AAAI_INTRO = "https://aaai-iji8.onrender.com/about"
+BGAA_INTRO = "https://motoraathailand.github.io/bgaa-site/"
 TH_INTRO = {
     "nammanthuk": NAMMANTHUK_INTRO,
     "aafranchise": AAFRANCHISE_INTRO,
     "aaai": AAAI_INTRO,
+    "bgaa": BGAA_INTRO,
 }
 
 PALETTES = {
@@ -179,8 +181,8 @@ def store_card(app, index, default_index):
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    # Nammanthuk, AA Franchise and AAAi link both stores to their intro pages.
-    # Every other card stays in development.
+    # Every card links both stores to its intro page (none is on the stores yet).
+    # A card without an intro page would show the in-development control.
     href = TH_INTRO.get(app["id"])
     buttons = store_button("google-play", default_index, href) + store_button("app-store", default_index, href)
     return f'''<li class="m-stagger" style="{style}">
