@@ -14,9 +14,9 @@ DELETED = ('kr/index.html', 'kr')
 TH_URL = 'https://motoraath.com'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
-    # /th/ after BGAA App Store button set to unsupported (2026-11-12).
-    'index.html': '17ce63d94271792ce208795a66e92f85e1b71f52984913b288acb3df68a5e4c6',
-    'th/index.html': '17ce63d94271792ce208795a66e92f85e1b71f52984913b288acb3df68a5e4c6',
+    # /th/ after showing only Nammanthuk and BGAA (2026-11-12).
+    'index.html': 'c31d6a0eb20172404b59d2f9dae4183311f41cae7cd31d1865c49679957ad289',
+    'th/index.html': 'c31d6a0eb20172404b59d2f9dae4183311f41cae7cd31d1865c49679957ad289',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
@@ -28,8 +28,8 @@ NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
 AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
 AAAI_INTRO = 'https://aaai-iji8.onrender.com/about'
 BGAA_INTRO = 'https://motoraathailand.github.io/bgaa-site/'
-TH_ORDER = ('nammanthuk', 'aafranchise', 'aaai', 'bgaa')
-TH_NAMES = ('น้ำมันถูก', 'AA Franchise', 'AAAi', 'BGAA')
+TH_ORDER = ('nammanthuk', 'bgaa')
+TH_NAMES = ('น้ำมันถูก', 'BGAA')
 
 class Page(HTMLParser):
     def __init__(self):
@@ -89,7 +89,7 @@ class Hubs(unittest.TestCase):
         self.assertEqual(page.body_region, 'th')
         self.assertEqual([c['id'] for c in page.cards], list(TH_ORDER))
         self.assertEqual(tuple(page.names), TH_NAMES)
-        self.assertEqual(len(page.stores), 8)
+        self.assertEqual(len(page.stores), 4)
         self.assertNotIn('soon-section', text)
         self.assertNotIn('class="cta"', text)
         self.assertNotIn('class="palm"', text)
@@ -97,6 +97,8 @@ class Hubs(unittest.TestCase):
         self.assertNotIn('play.google.com', text)
         self.assertNotIn('apps.apple.com', text)
         self.assertNotIn('data-app="fuelkr"', text)
+        self.assertNotIn('data-app="aafranchise"', text)
+        self.assertNotIn('data-app="aaai"', text)
         self.assertNotIn('join.html', text)
         self.assertIn('window.HUB_REGION="th"', text)
         self.assertIn('window.HUB_DEFAULT="th"', text)
@@ -116,14 +118,6 @@ class Hubs(unittest.TestCase):
         self.assertNotIn('data-state="dev"', text)
         self.assertIn('data-state="unsupported"', text)
         self.assertIn('data-i18n="unsupported_badge"', text)
-        expect['aaai'] = (
-            ('google-play', 'live', AAAI_INTRO),
-            ('app-store', 'live', AAAI_INTRO),
-        )
-        expect['aafranchise'] = (
-            ('google-play', 'live', AAFRANCHISE_INTRO),
-            ('app-store', 'live', AAFRANCHISE_INTRO),
-        )
         self.assertTrue(all(st in ('live', 'unsupported') for v in expect.values() for _, st, _ in v), 'no in-development cards')
         unsupported = 'ไม่รองรับ'
         for card in page.cards:
