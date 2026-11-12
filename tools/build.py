@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Build the MOTOR AA app hub. Only the Thailand hub (/th/) is operated.
+"""Build the MOTOR AA app hub. The Thailand collection page is the site root.
 
-The former Worldwide (/) and Korea (/kr/) hubs are deleted. Nothing is built
-at / or /kr/; GitHub Pages answers them with 404.html.
+Published at https://motoraath.com (custom domain). The same page is also
+written at /th/ so older https://motoraathailand.github.io/th links still work.
+The former Korea hub (/kr/) stays deleted; GitHub Pages answers it with 404.html.
 
 Run ``python3 tools/build.py``. Add ``--fonts`` to refresh the self-hosted
 Korean, Chinese and Devanagari subsets after changing translated copy.
@@ -14,14 +15,14 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = "https://motoraathailand.github.io"
+SITE = "https://motoraath.com"
 EMAIL = "motoraathailand@gmail.com"
 LANGS = [("th", "ไทย"), ("en", "English"), ("ko", "한국어"), ("zh", "中文"), ("hi", "हिन्दी")]
 PAGES = [
     {"slug": "th", "path": "th/", "default": "th"},
 ]
-# The owner writes the hub address without a trailing slash; Pages 301s it to /th/.
-TH_URL = SITE + "/th"
+# The collection page is the site root. No trailing slash in the canonical URL.
+TH_URL = SITE
 
 # App registry. The Thailand hub shows three fixed cards, in order, with store
 # buttons. play_tester is kept on the registry for the apps' own introduction
@@ -314,6 +315,9 @@ def build():
         os.makedirs(directory, exist_ok=True)
         with open(os.path.join(directory, "index.html"), "w", encoding="utf-8") as f:
             f.write(render_page(page).replace("|", " "))
+    # Same Thailand hub at the site root (motoraath.com/).
+    with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:
+        f.write(render_page(PAGES[0]).replace("|", " "))
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
         f.write(f'<url><loc>{TH_URL}</loc></url>\n')
@@ -324,4 +328,4 @@ if __name__ == "__main__":
     build()
     if "--fonts" in sys.argv:
         fonts()
-    print("Built /th/ and sitemap.xml")
+    print("Built /, /th/, and sitemap.xml")
