@@ -14,8 +14,8 @@ DELETED = ('index.html', 'kr/index.html', 'kr')
 TH_URL = 'https://motoraathailand.github.io/th'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
-    # /th/ after removing the region label text only (cards, store buttons, star unchanged).
-    'th/index.html': 'aad7f71e23e12143b3d4a142d4e4e226345eae603ae7d3fa4dd69f5d04871fa5',
+    # /th/ after BGAA App Store button set to unsupported (2026-11-12).
+    'th/index.html': '5101dd3055291aa41348954a0d26aefa775e918766482b207ba1c2b97f65ef91',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
@@ -106,9 +106,11 @@ class Hubs(unittest.TestCase):
         )
         expect['bgaa'] = (
             ('google-play', 'live', BGAA_INTRO),
-            ('app-store', 'live', BGAA_INTRO),
+            ('app-store', 'unsupported', None),
         )
         self.assertNotIn('data-state="dev"', text)
+        self.assertIn('data-state="unsupported"', text)
+        self.assertIn('data-i18n="unsupported_badge"', text)
         expect['aaai'] = (
             ('google-play', 'live', AAAI_INTRO),
             ('app-store', 'live', AAAI_INTRO),
@@ -117,7 +119,8 @@ class Hubs(unittest.TestCase):
             ('google-play', 'live', AAFRANCHISE_INTRO),
             ('app-store', 'live', AAFRANCHISE_INTRO),
         )
-        self.assertTrue(all(st == 'live' for v in expect.values() for _, st, _ in v), 'no in-development cards left')
+        self.assertTrue(all(st in ('live', 'unsupported') for v in expect.values() for _, st, _ in v), 'no in-development cards')
+        unsupported = 'ไม่รองรับ'
         for card in page.cards:
             self.assertFalse(card['linked'])
             self.assertEqual(len(card['stores']), 2)
@@ -130,6 +133,13 @@ class Hubs(unittest.TestCase):
                     self.assertEqual(store['tag'], 'a')
                     self.assertEqual(store['href'], href)
                     self.assertFalse(store['disabled'])
+                    self.assertNotIn(dev, store['text'])
+                    self.assertNotIn(unsupported, store['text'])
+                elif state == 'unsupported':
+                    self.assertEqual(store['tag'], 'button')
+                    self.assertIsNone(store['href'])
+                    self.assertTrue(store['disabled'])
+                    self.assertIn(unsupported, store['text'])
                     self.assertNotIn(dev, store['text'])
                 else:
                     self.assertEqual(store['tag'], 'button')

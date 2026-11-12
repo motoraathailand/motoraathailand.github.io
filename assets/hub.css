@@ -56,7 +56,7 @@ body[data-region="th"] .store-mark{width:16px;height:16px;flex:none;display:bloc
 body[data-region="th"] .store-copy{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;min-width:0;line-height:1.1}
 body[data-region="th"] .store-name{font-size:12px;font-weight:700;letter-spacing:-.03em;white-space:nowrap}
 body[data-region="th"] .store-state{font-size:10px;font-weight:600;letter-spacing:-.02em;color:#ffd8cc;white-space:nowrap}
-body[data-region="th"] .store[data-state="dev"],body[data-region="th"] .store:disabled{background:#3a312e;color:#fff;cursor:not-allowed;box-shadow:none;border-style:dashed;border-color:#ffffff73;opacity:1}
+body[data-region="th"] .store[data-state="dev"],body[data-region="th"] .store[data-state="unsupported"],body[data-region="th"] .store:disabled{background:#3a312e;color:#fff;cursor:not-allowed;box-shadow:none;border-style:dashed;border-color:#ffffff73;opacity:1}
 @media(hover:hover){body[data-region="th"] a.store[data-state="live"]:hover{transform:translate3d(0,-2px,0)}}
 @media(min-width:680px){body[data-region="th"] .card{min-height:244px}body[data-region="th"] .stores{gap:8px}body[data-region="th"] .store{gap:8px;min-height:48px;padding:6px 10px}body[data-region="th"] .store-mark{width:18px;height:18px}body[data-region="th"] .store-name{font-size:13px}body[data-region="th"] .store-state{font-size:11px}}
 @media(max-width:360px){body[data-region="th"] .stores{gap:5px}body[data-region="th"] .store{gap:5px;min-height:42px;padding:4px 6px}body[data-region="th"] .store-mark{width:14px;height:14px}body[data-region="th"] .store-name{font-size:11px}body[data-region="th"] .store-state{font-size:9.5px}}

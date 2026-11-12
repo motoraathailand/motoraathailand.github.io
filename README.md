@@ -26,8 +26,9 @@ Google Play button and an App Store button, and no leaf decoration. Both
 Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`,
 and both AA Franchise buttons open
 `https://motoraathailand.github.io/aafranchise-site/`. Those intro pages follow
-the device language. Both AAAi buttons open its intro page, and both BGAA buttons open
-`https://motoraathailand.github.io/bgaa-site/`. No card is in development. Thailand-only stylesheet rules are appended under
+the device language. Both AAAi buttons open its intro page. BGAA's Google Play button opens
+`https://motoraathailand.github.io/bgaa-site/`; its App Store button is disabled and shows
+“not supported” (지원하지 않음). No card is in development. Thailand-only stylesheet rules are appended under
 `body[data-region="th"]` and the Thailand page loads them with its own CSS query.
 
 `assets/hub.css` is the tropical coral/peach design. `icons/logo-mark.png` is
