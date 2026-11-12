@@ -24,7 +24,7 @@ PAGES = [
 # The collection page is the site root. No trailing slash in the canonical URL.
 TH_URL = SITE
 
-# App registry. The Thailand hub shows three fixed cards, in order, with store
+# App registry. The Thailand hub shows two fixed cards, in order, with store
 # buttons. play_tester is kept on the registry for the apps' own introduction
 # sites and is not used as a hub store link.
 APPS = [
@@ -46,10 +46,10 @@ APPS = [
 for app in APPS:
     app.setdefault("region", "global")
 
-# Thailand hub. Thailand-only apps first (nammanthuk, AA Franchise), then AAAi,
-# then BGAA. Other apps stay
-# in the registry but are hidden from /th/. Korea-only fuelkr stays omitted.
-TH_STORE_ORDER = ("nammanthuk", "aafranchise", "aaai", "bgaa")
+# Thailand hub. For now (2026-11-12): only nammanthuk and BGAA.
+# AA Franchise, AAAi and other apps stay in the registry but are hidden from
+# the collection page. Korea-only fuelkr stays omitted.
+TH_STORE_ORDER = ("nammanthuk", "bgaa")
 # These cards' store buttons open the app intro page, except BGAA's App Store
 # button, which is unsupported (2026-11-12). Intro pages follow ?lang=, then
 # the saved choice, then the device language, and fall back to English. Not
@@ -206,7 +206,7 @@ def store_card(app, index, default_index):
 
 
 def render_page(page):
-    """Render the Thailand hub: three fixed store cards, no region label text."""
+    """Render the Thailand hub: two fixed store cards, no region label text."""
     index = LANGS.index(next(item for item in LANGS if item[0] == page["default"]))
     url = TH_URL
     title = S["doc_title"][index]

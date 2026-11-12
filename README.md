@@ -2,7 +2,7 @@
 
 The **Thailand** collection page is the site root, on the custom domain <https://motoraath.com>:
 
-- `/` — Thailand market. Thai is the primary version of the page, not a forced language. Thailand-only apps first: น้ำมันถูก, AA Franchise, then AAAi and BGAA, each with store buttons. The hero keeps its star mark without a region label.
+- `/` — Thailand market. Thai is the primary version of the page, not a forced language. For now the page shows only น้ำมันถูก and BGAA, each with store buttons. The hero keeps its star mark without a region label.
 - `/th/` — the same page, kept so older `https://motoraathailand.github.io/th` links still work. Canonical, og:url and the sitemap use `https://motoraath.com`.
 - `/kr/` — deleted (Nov 11, 2026). No page and no redirect; GitHub Pages serves `404.html` (a plain not-found page with a link to `/`).
 
@@ -20,13 +20,11 @@ python3 tools/build.py --fonts
 
 `tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
 renders `index.html` (and the same file at `th/index.html`) and `sitemap.xml` (which lists
-only `https://motoraath.com`). The collection page does not show `주유소를부탁해`. The generator writes only น้ำมันถูก, AA Franchise,
-then BGAA. Other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. Each card has a
+only `https://motoraath.com`). The collection page does not show `주유소를부탁해`. The generator writes only น้ำมันถูก
+and BGAA (2026-11-12). AA Franchise, AAAi and other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. Each card has a
 Google Play button and an App Store button, and no leaf decoration. Both
-Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`,
-and both AA Franchise buttons open
-`https://motoraathailand.github.io/aafranchise-site/`. Those intro pages follow
-the device language. Both AAAi buttons open its intro page. BGAA's Google Play button opens
+Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`.
+That intro page follows the device language. BGAA's Google Play button opens
 `https://motoraathailand.github.io/bgaa-site/`; its App Store button is disabled and shows
 “not supported” (지원하지 않음). No card is in development. Thailand-only stylesheet rules are appended under
 `body[data-region="th"]` and the Thailand page loads them with its own CSS query.
@@ -49,7 +47,7 @@ python3 tools/verify.py
 ```
 
 The verification fails when `/kr/` exists, `404.html` redirects, the root and `/th/` pages differ, a Thailand
-page that is not the three cards in order with six store buttons in the right
+page that is not the two cards in order with four store buttons in the right
 state, region label text or hub cross-links on `/th/`, a rebuild that differs
 from the committed output, non-winged-AA header images, broken local asset
 paths, or a sitemap that lists anything but `https://motoraath.com`.
