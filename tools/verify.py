@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static invariants for the MOTOR AA hub: only /th/ exists; / and /kr/ are deleted."""
+"""Static invariants for the MOTOR AA hub: Thailand collection at / and /th/; /kr/ is deleted."""
 from html.parser import HTMLParser
 from pathlib import Path
 import hashlib
@@ -10,12 +10,13 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
 # Deleted hubs: these files must not exist.
-DELETED = ('index.html', 'kr/index.html', 'kr')
-TH_URL = 'https://motoraathailand.github.io/th'
+DELETED = ('kr/index.html', 'kr')
+TH_URL = 'https://motoraath.com'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
     # /th/ after BGAA App Store button set to unsupported (2026-11-12).
-    'th/index.html': '5101dd3055291aa41348954a0d26aefa775e918766482b207ba1c2b97f65ef91',
+    'index.html': '17ce63d94271792ce208795a66e92f85e1b71f52984913b288acb3df68a5e4c6',
+    'th/index.html': '17ce63d94271792ce208795a66e92f85e1b71f52984913b288acb3df68a5e4c6',
     'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
@@ -68,14 +69,18 @@ class Page(HTMLParser):
         if self._store: self._store_buf.append(data)
 
 class Hubs(unittest.TestCase):
-    def test_world_and_korea_hubs_deleted(self):
+    def test_korea_hub_deleted_and_root_is_thailand(self):
         for rel in DELETED:
             self.assertFalse((ROOT / rel).exists(), rel)
         html_pages = sorted(str(p.relative_to(ROOT)) for p in ROOT.rglob('*.html') if '.git' not in p.parts)
-        self.assertEqual(html_pages, ['404.html', 'th/index.html'])
+        self.assertEqual(html_pages, ['404.html', 'index.html', 'th/index.html'])
         notfound = (ROOT / '404.html').read_text(encoding='utf-8')
         self.assertNotIn('http-equiv="refresh"', notfound)
         self.assertNotIn('location.', notfound)
+        self.assertIn('href="/"', notfound)
+        root = (ROOT / 'index.html').read_text(encoding='utf-8')
+        th = (ROOT / 'th' / 'index.html').read_text(encoding='utf-8')
+        self.assertEqual(root, th)
 
     def test_thailand_cards_and_store_buttons(self):
         text = (ROOT / 'th' / 'index.html').read_text(encoding='utf-8')
@@ -174,7 +179,11 @@ class Hubs(unittest.TestCase):
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
         self.assertEqual([p['slug'] for p in mod.PAGES], ['th'])
-        self.assertEqual(mod.render_page(mod.PAGES[0]).replace('|', ' '), (ROOT / 'th' / 'index.html').read_text(encoding='utf-8'))
+        rendered = mod.render_page(mod.PAGES[0]).replace('|', ' ')
+        self.assertEqual(rendered, (ROOT / 'th' / 'index.html').read_text(encoding='utf-8'))
+        self.assertEqual(rendered, (ROOT / 'index.html').read_text(encoding='utf-8'))
+        self.assertEqual(mod.SITE, 'https://motoraath.com')
+        self.assertEqual(mod.TH_URL, 'https://motoraath.com')
         self.assertFalse(hasattr(mod, 'render_redirect'))
         for rel, digest in STABLE_SHA256.items():
             body = (ROOT / rel).read_bytes()
@@ -212,5 +221,11 @@ class Hubs(unittest.TestCase):
         xml = ET.parse(ROOT / 'sitemap.xml')
         actual = [item.text for item in xml.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
         self.assertEqual(actual, [TH_URL])
+
+    def test_custom_domain(self):
+        self.assertEqual((ROOT / 'CNAME').read_text(encoding='utf-8').strip(), 'motoraath.com')
+        robots = (ROOT / 'robots.txt').read_text(encoding='utf-8')
+        self.assertIn('Sitemap: https://motoraath.com/sitemap.xml', robots)
+        self.assertNotIn('motoraathailand.github.io/sitemap.xml', robots)
 
 if __name__ == '__main__': unittest.main()
