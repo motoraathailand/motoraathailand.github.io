@@ -49,9 +49,10 @@ for app in APPS:
 # then BGAA. Other apps stay
 # in the registry but are hidden from /th/. Korea-only fuelkr stays omitted.
 TH_STORE_ORDER = ("nammanthuk", "aafranchise", "aaai", "bgaa")
-# These cards link both store buttons to the app intro page. The pages follow
-# ?lang=, then the saved choice, then the device language, and fall back to
-# English. Not join.html.
+# These cards' store buttons open the app intro page, except BGAA's App Store
+# button, which is unsupported (2026-11-12). Intro pages follow ?lang=, then
+# the saved choice, then the device language, and fall back to English. Not
+# join.html.
 NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
 AAFRANCHISE_INTRO = "https://motoraathailand.github.io/aafranchise-site/"
 AAAI_INTRO = "https://aaai-iji8.onrender.com/about"
@@ -90,6 +91,7 @@ S = {
     "apps_h": ["แอปของเรา", "Our apps", "앱 둘러보기", "我们的应用", "हमारे ऐप"],
     "open": ["ดูรายละเอียด", "Explore app", "자세히 보기", "查看详情", "ऐप देखें"],
     "dev_badge": ["กำลังพัฒนา", "In development", "개발 중", "开发中", "विकासाधीन"],
+    "unsupported_badge": ["ไม่รองรับ", "Not supported", "지원하지 않음", "不支持", "समर्थित नहीं"],
     "contact_h": ["มาคุยกัน", "Let’s talk", "문의하기", "联系我们", "बात करें"],
     "contact_p": ["ข้อเสนอแนะหรือคำถาม ส่งอีเมลหาเราได้เลย", "A question, an idea, or just want to say hello?", "앱에 대한 의견이나 질문을 보내 주세요.", "有任何意见或问题，欢迎发邮件给我们。", "कोई सवाल या सुझाव? हमें ईमेल करें।"],
     "email_btn": ["ส่งอีเมล", "Send email", "메일 보내기", "发送邮件", "ईमेल भेजें"],
@@ -151,8 +153,12 @@ PLAY_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><pat
 APPLE_MARK = '<svg class="store-mark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.37 12.64c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.61 2.25 2.76 2.21 1.11-.04 1.53-.71 2.87-.71 1.34 0 1.72.71 2.89.69 1.19-.02 1.95-1.08 2.68-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.34-3.54zM14.7 6.55c.61-.74 1.02-1.77.91-2.8-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.21z"/></svg>'
 
 
-def store_button(kind, default_index, href):
-    """One identifiable store control. href None is in-development, not a link."""
+def store_button(kind, default_index, href, badge=None):
+    """One identifiable store control.
+
+    href set: live link. href None and badge "unsupported": not supported,
+    disabled, no link. Otherwise: in-development, disabled, no link.
+    """
     mark = PLAY_MARK if kind == "google-play" else APPLE_MARK
     label = "Google Play" if kind == "google-play" else "App Store"
     if href:
@@ -160,11 +166,13 @@ def store_button(kind, default_index, href):
             f'<a class="store" data-store="{kind}" data-state="live" href="{html.escape(href, quote=True)}" rel="noopener" data-press data-ripple>'
             f'{mark}<span class="store-copy"><span class="store-name">{label}</span></span></a>'
         )
-    state = html.escape(S["dev_badge"][default_index])
+    key = "unsupported_badge" if badge == "unsupported" else "dev_badge"
+    state_name = "unsupported" if badge == "unsupported" else "dev"
+    state = html.escape(S[key][default_index])
     return (
-        f'<button type="button" class="store" data-store="{kind}" data-state="dev" disabled aria-disabled="true">'
+        f'<button type="button" class="store" data-store="{kind}" data-state="{state_name}" disabled aria-disabled="true">'
         f'{mark}<span class="store-copy"><span class="store-name">{label}</span>'
-        f'<span class="store-state" data-i18n="dev_badge">{state}</span></span></button>'
+        f'<span class="store-state" data-i18n="{key}">{state}</span></span></button>'
     )
 
 
@@ -181,10 +189,16 @@ def store_card(app, index, default_index):
   <span class="desc" data-i18n="d_{app['id']}">{html.escape(description)}</span>
 </span>'''
     picture = f'''<span class="app-ic"><img src="/{app['icon']}?v=2" alt="" width="96" height="96" decoding="async"></span>'''
-    # Every card links both stores to its intro page (none is on the stores yet).
-    # A card without an intro page would show the in-development control.
+    # Most cards link both stores to the intro page. BGAA's App Store button
+    # is not supported (2026-11-12). A card without an intro page would show
+    # the in-development control.
     href = TH_INTRO.get(app["id"])
-    buttons = store_button("google-play", default_index, href) + store_button("app-store", default_index, href)
+    play = store_button("google-play", default_index, href)
+    if app["id"] == "bgaa":
+        store = store_button("app-store", default_index, None, badge="unsupported")
+    else:
+        store = store_button("app-store", default_index, href)
+    buttons = play + store
     return f'''<li class="m-stagger" style="{style}">
 <div class="card" data-app="{app['id']}">{copy}{picture}<span class="stores">{buttons}</span></div>
 </li>'''
@@ -274,7 +288,7 @@ def render_page(page):
 
 def fonts():
     """Subset installed Noto fonts to the hub's own Korean, Chinese and Hindi text."""
-    text = {code: "".join(S[key][i] for key in S) + name for i, (code, name) in enumerate(LANGS)}
+    text = {code: "".join(S[key][i] for key in S) + "".join(TH_S[key][i] for key in TH_S) + name for i, (code, name) in enumerate(LANGS)}
     for weight, tag in ((400, "Regular"), (700, "Bold")):
         filename = f"/usr/share/fonts/opentype/noto/NotoSansCJK-{tag}.ttc"
         if not os.path.isfile(filename):
