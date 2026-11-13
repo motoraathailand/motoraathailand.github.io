@@ -1,17 +1,15 @@
-/* Independent regional hubs. ?lang= > this region's saved choice > device language > English. */
+/* Independent regional hubs. ?lang= > this region's saved choice > this region's default (Thai on this hub). Does not follow the device or browser language. */
 (function () {
   'use strict';
   var S = window.HUB_STRINGS, L = window.HUB_LANGS, doc = document, root = doc.documentElement;
-  var def = window.HUB_DEFAULT || 'en', region = window.HUB_REGION || 'world';
+  var def = window.HUB_DEFAULT || 'th', region = window.HUB_REGION || 'world';
   var STORE = 'motoraa.lang.' + region;
   var NAMES = { th: 'ไทย', en: 'English', ko: '한국어', zh: '中文', hi: 'हिन्दी' };
   function norm(t) { t = String(t || '').toLowerCase().split(/[-_]/)[0]; return L.indexOf(t) >= 0 ? t : null; }
   function store(v) { try { if (v === undefined) return localStorage.getItem(STORE); localStorage.setItem(STORE, v); } catch (e) { return null; } }
   function pick() {
     var q = null; try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
-    var dev = null, list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
-    for (var i = 0; i < list.length && !dev; i++) dev = norm(list[i]);
-    return norm(q) || norm(store()) || dev || 'en';
+    return norm(q) || norm(store()) || def;
   }
   var SPACED = { en: 1, ko: 1, hi: 1 };
   function setText(el, v, code) {
