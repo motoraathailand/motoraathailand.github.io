@@ -15,9 +15,9 @@ TH_URL = 'https://motoraath.com'
 # Bytes of shared files this change must not touch.
 STABLE_SHA256 = {
     # /th/ after showing only Nammanthuk and BGAA (2026-11-12).
-    'index.html': 'c31d6a0eb20172404b59d2f9dae4183311f41cae7cd31d1865c49679957ad289',
-    'th/index.html': 'c31d6a0eb20172404b59d2f9dae4183311f41cae7cd31d1865c49679957ad289',
-    'assets/hub.js': '94396a697ab78814233e455899a4bd5cd8cb035d1f16c626c7fd813eaf31b7a2',
+    'index.html': '729dd40eca448aba544c17541abc32fe23bd83d593abc708cec139305c803e4d',
+    'th/index.html': '729dd40eca448aba544c17541abc32fe23bd83d593abc708cec139305c803e4d',
+    'assets/hub.js': '85cc6f953d073b191bce8fdae4a918b935be6d229df346544781e018cd0b78d4',
     'motion.css': 'a441adf71bc5d124353e1ec14f81f52d5c389a25462299036ce4ab36a7f6f447',
     'motion.js': '7807dd5b18432e4dece794d932d54369f22d3a87ef861dd4bdf708a7f5de9da1',
 }
@@ -25,7 +25,6 @@ REGION_TEXT = ('ไทย + ทั่วโลก', 'Thailand + Worldwide', '태
                'Worldwide apps', '한국 + 전 세계', 'Korea + Worldwide', '전 세계 앱')
 CSS_PREFIX_SHA256 = 'd6430472029f7db1ab721763ef2eeb378c2cb32fce77a441cc26b1c2d45e4104'
 NAMMANTHUK_INTRO = 'https://motoraathailand.github.io/nammanthuk-site/'
-AAFRANCHISE_INTRO = 'https://motoraathailand.github.io/aafranchise-site/'
 AAAI_INTRO = 'https://aaai-iji8.onrender.com/about'
 BGAA_INTRO = 'https://motoraathailand.github.io/bgaa-site/'
 TH_ORDER = ('nammanthuk', 'bgaa')
@@ -190,14 +189,14 @@ class Hubs(unittest.TestCase):
         self.assertIn(b'body[data-region="th"]', added)
         self.assertNotIn(b'\n.card{', added)
         js = (ROOT / 'assets' / 'hub.js').read_text(encoding='utf-8')
-        self.assertIn("return norm(q) || norm(store()) || dev || 'en';", js)
+        self.assertIn("return norm(q) || norm(store()) || def;", js)
+        self.assertIn("Does not follow the device or browser language.", js)
         self.assertIn("var STORE = 'motoraa.lang.' + region;", js)
 
     def test_intro_pages_resolve(self):
         import urllib.request
         for url, needle in (
             (NAMMANTHUK_INTRO, 'น้ำมันถูก'),
-            (AAFRANCHISE_INTRO, 'AA Franchise'),
             (AAAI_INTRO, 'AAAi'),
             (BGAA_INTRO, 'BGAA'),
         ):
@@ -205,7 +204,12 @@ class Hubs(unittest.TestCase):
             with urllib.request.urlopen(req, timeout=30) as res:
                 body = res.read().decode('utf-8', 'replace')
                 self.assertEqual(res.status, 200, url)
-                self.assertEqual(res.geturl(), url)
+                # Project Pages under the user site redirect to motoraath.com/<repo>/.
+                final = res.geturl()
+                if final != url:
+                    self.assertEqual(urlsplit(final).path, urlsplit(url).path, url)
+                    self.assertEqual(urlsplit(final).scheme, 'https')
+                    self.assertIn(urlsplit(final).hostname, ('motoraath.com', 'www.motoraath.com', urlsplit(url).hostname), url)
                 self.assertIn('html', res.headers.get('content-type', ''))
             self.assertIn('rel="canonical" href="%s"' % url, body)
             self.assertIn(needle, body)

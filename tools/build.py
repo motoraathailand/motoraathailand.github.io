@@ -38,7 +38,6 @@ APPS = [
     dict(id="scanner", name="GREENLIGHT", icon="icons/greenlight.png", url=None, live=False, dev=True),
     dict(id="nammanthuk", name="น้ำมันถูก", icon="icons/nammanthuk.png", url="https://motoraathailand.github.io/nammanthuk-site/", live=True, region="th",
          play_tester="https://motoraathailand.github.io/nammanthuk-site/join.html"),
-    dict(id="aafranchise", name="AA Franchise", icon="icons/aafranchise.png", url="https://motoraathailand.github.io/aafranchise-site/", live=True, region="th"),
     dict(id="fuelkr", name="주유소를부탁해", icon="icons/fuelkr.png", url=None, live=False, dev=True, region="kr"),
     # Global mini-game app, kept in the registry but not shown on /th/ for now.
     dict(id="ezz", name="EZZ", icon="icons/ezz.png", url=None, live=False, dev=True, region="global"),
@@ -47,20 +46,19 @@ for app in APPS:
     app.setdefault("region", "global")
 
 # Thailand hub. For now (2026-11-12): only nammanthuk and BGAA.
-# AA Franchise, AAAi and other apps stay in the registry but are hidden from
-# the collection page. Korea-only fuelkr stays omitted.
+# AAAi and other apps stay in the registry but are hidden from
+# the collection page. Korea-only fuelkr stays omitted. AA Franchise was
+# removed from the registry on 2026-11-14.
 TH_STORE_ORDER = ("nammanthuk", "bgaa")
 # These cards' store buttons open the app intro page, except BGAA's App Store
 # button, which is unsupported (2026-11-12). Intro pages follow ?lang=, then
 # the saved choice, then the device language, and fall back to English. Not
 # join.html.
 NAMMANTHUK_INTRO = "https://motoraathailand.github.io/nammanthuk-site/"
-AAFRANCHISE_INTRO = "https://motoraathailand.github.io/aafranchise-site/"
 AAAI_INTRO = "https://aaai-iji8.onrender.com/about"
 BGAA_INTRO = "https://motoraathailand.github.io/bgaa-site/"
 TH_INTRO = {
     "nammanthuk": NAMMANTHUK_INTRO,
-    "aafranchise": AAFRANCHISE_INTRO,
     "aaai": AAAI_INTRO,
     "bgaa": BGAA_INTRO,
 }
@@ -73,7 +71,6 @@ PALETTES = {
     "bgaa": ("#eeb4a9", "#f7d4c1", "#6c3c35"),
     "scanner": ("#e99b8d", "#f4c4ae", "#693a30"),
     "nammanthuk": ("#de7869", "#ef9c82", "#fffaf6"),
-    "aafranchise": ("#df7768", "#efa285", "#fffaf6"),
     "fuelkr": ("#edab98", "#f8cfb8", "#663c30"),
     "ezz": ("#ee9fb6", "#f8c9d6", "#6b2a40"),
 }
@@ -104,7 +101,6 @@ S = {
     "cat_nammanthuk": ["ราคาน้ำมันในประเทศไทย", "Fuel prices · Thailand", "태국 주유소 가격", "泰国油价", "थाईलैंड में ईंधन के दाम"],
     "cat_aacalc": ["เครื่องคิดเลข", "Calculator", "계산기", "计算器", "कैलकुलेटर"],
     "cat_moffee": ["POS รับออเดอร์", "POS & orders", "POS·주문", "POS 点单", "POS ऑर्डर"],
-    "cat_aafranchise": ["แฟรนไชส์ไทย", "Thai franchises", "태국 프랜차이즈", "泰国加盟", "थाई फ्रेंचाइज़"],
     "cat_bgaa": ["เพลงประกอบร้าน", "Store background music", "매장 배경음악", "店铺背景音乐", "स्टोर बैकग्राउंड संगीत"],
     "cat_scanner": ["Benz · BMW · Audi", "Benz · BMW · Audi diagnostics", "벤츠·BMW·아우디 점검", "奔驰·宝马·奥迪诊断", "Benz · BMW · Audi जांच"],
     "cat_fuelkr": ["주유소 가격 · 한국", "Fuel prices · Korea", "주유소 가격 · 한국", "韩国油价 · 韩国", "कोरिया में ईंधन के दाम"],
@@ -115,7 +111,6 @@ S = {
     "d_bgaa": ["เพลงประกอบร้านที่ปลอดภัยเรื่องลิขสิทธิ์ เลือกเพลย์ลิสต์ที่เข้ากับบรรยากาศร้าน", "Copyright-safe background music for shops and cafés. Pick a playlist that fits the mood.", "저작권 걱정 없는 매장 배경음악. 가게 분위기에 어울리는 플레이리스트를 골라 보세요.", "适用于商店和咖啡馆的版权安全背景音乐。", "दुकानों और कैफ़े के लिए कॉपीराइट-सुरक्षित बैकग्राउंड संगीत।"],
     "d_scanner": ["วิเคราะห์เชิงลึกและโค้ดดิ้งสำหรับ Mercedes-Benz, BMW และ Audi", "In-depth diagnostics and coding for Mercedes-Benz, BMW and Audi.", "벤츠·BMW·아우디를 위한 정밀진단 및 코딩 앱.", "专为奔驰、宝马和奥迪打造的深度诊断与编码应用。", "Mercedes-Benz, BMW और Audi के लिए गहन डायग्नोस्टिक्स और कोडिंग।"],
     "d_nammanthuk": ["ดูราคาน้ำมัน ปั๊มใกล้คุณ และสถานะน้ำมันจากผู้ใช้ในประเทศไทย", "Fuel prices, nearby stations and driver-shared stock updates across Thailand.", "태국의 유가, 가까운 주유소와 운전자가 공유하는 재고 정보를 확인해요.", "查看泰国油价、附近加油站以及车主分享的油品库存。", "थाईलैंड में ईंधन की कीमतें, पास के पंप और स्टॉक अपडेट।"],
-    "d_aafranchise": ["ค้นหาและเปรียบเทียบแฟรนไชส์ไทย ดูเงินลงทุนและระยะคืนทุน", "Discover and compare Thai franchises, from investment to payback period.", "태국 프랜차이즈의 투자 비용과 투자 회수 기간을 비교해 보세요.", "发现泰国加盟品牌，比较投资额与回本周期。", "थाई फ्रेंचाइज़ खोजें और निवेश की तुलना करें।"],
     "d_fuelkr": ["ข้อมูลราคาน้ำมันและปั๊มใกล้เคียงสำหรับผู้ขับขี่ในเกาหลี กำลังอยู่ระหว่างการพัฒนา", "Fuel prices and nearby stations for drivers in Korea. Currently in development.", "한국 운전자를 위한 유가와 가까운 주유소 정보. 현재 개발 중이에요.", "为韩国司机提供油价和附近加油站信息，目前正在开发中。", "कोरिया के ड्राइवरों के लिए ईंधन की कीमतें और पास के पेट्रोल पंप। विकास में।"],
 }
 

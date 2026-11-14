@@ -21,7 +21,7 @@ python3 tools/build.py --fonts
 `tools/build.py` contains the app registry and th/en/ko/zh/hi translations. It
 renders `index.html` (and the same file at `th/index.html`) and `sitemap.xml` (which lists
 only `https://motoraath.com`). The collection page does not show `주유소를부탁해`. The generator writes only น้ำมันถูก
-and BGAA (2026-11-12). AA Franchise, AAAi and other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. Each card has a
+and BGAA (2026-11-12). AAAi and other apps stay in the registry and are hidden from `/th/`. EZZ stays in the registry, hidden. AA Franchise was removed from the registry and icons on 2026-11-14. Each card has a
 Google Play button and an App Store button, and no leaf decoration. Both
 Nammanthuk buttons open `https://motoraathailand.github.io/nammanthuk-site/`.
 That intro page follows the device language. BGAA's Google Play button opens
